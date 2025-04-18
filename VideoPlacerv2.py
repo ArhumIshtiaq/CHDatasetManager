@@ -60,7 +60,16 @@ class VideoPlacerApp:
     def __init__(self, master):
         self.master = master
         master.title("Video Placement Helper (Animated Preview)") # Updated title
-        master.geometry("600x720") # Adjusted height if needed
+        # master.geometry("600x720") # Adjusted height if needed - Remove fixed size
+
+        # --- Center the window --- 
+        master.update_idletasks() # Ensure window dimensions are calculated
+        width = 650 # Adjusted width for better layout
+        height = 750 # Adjusted height for more content
+        x = (master.winfo_screenwidth() // 2) - (width // 2)
+        y = (master.winfo_screenheight() // 2) - (height // 2)
+        master.geometry(f'{width}x{height}+{x}+{y}')
+        master.minsize(width, height) # Set minimum size
 
         # --- State Variables ---
         self.initial_setup_done = False
@@ -91,30 +100,34 @@ class VideoPlacerApp:
         # --- Style ---
         style = ttk.Style(); style.configure("TLabel", padding=5, font=('Helvetica', 10)); style.configure("TButton", padding=5, font=('Helvetica', 10)); style.configure("TCombobox", padding=5, font=('Helvetica', 10)); style.configure("TEntry", padding=5, font=('Helvetica', 10)); style.configure("Status.TLabel", font=('Helvetica', 9), foreground="grey"); style.configure("TakeAssign.TLabel", font=('Helvetica', 10, 'bold'), foreground="blue"); style.configure("Score.TLabel", font=('Helvetica', 9, 'bold'), foreground="green"); style.configure("Confirm.TCheckbutton", font=('Helvetica', 9))
 
-        # --- GUI Layout ---
+        # --- GUI Layout --- 
+        # Add more top padding globally
+        main_frame = ttk.Frame(master, padding="15 15 15 15") # Increased padding
+        main_frame.pack(expand=True, fill=tk.BOTH)
+
         row_basedir = 0; row_id = 1; row_cola = 2; row_colb = 3
         row_fileselect = 4; row_verification_area = 5; row_analysis_info = 6
         row_processbtn = 7; row_status = 8
 
-        # --- Widgets ---
+        # --- Widgets (Place inside main_frame) ---
         # (Dropdowns and file selection remain mostly the same)
-        ttk.Label(master, text="Base Directory:").grid(row=row_basedir, column=0, sticky=tk.W, padx=10, pady=5)
-        self.base_dir_entry = ttk.Entry(master, textvariable=self.base_directory, width=45, state='readonly'); self.base_dir_entry.grid(row=row_basedir, column=1, columnspan=2, padx=5, pady=5)
-        self.base_dir_button = ttk.Button(master, text="Browse...", command=self.select_base_dir); self.base_dir_button.grid(row=row_basedir, column=3, padx=10, pady=5)
-        ttk.Label(master, text="Interpreter ID:").grid(row=row_id, column=0, sticky=tk.W, padx=10, pady=5)
+        ttk.Label(main_frame, text="Base Directory:").grid(row=row_basedir, column=0, sticky=tk.W, padx=10, pady=(10, 5)) # Increased top pady
+        self.base_dir_entry = ttk.Entry(main_frame, textvariable=self.base_directory, width=45, state='readonly'); self.base_dir_entry.grid(row=row_basedir, column=1, columnspan=2, padx=5, pady=(10, 5))
+        self.base_dir_button = ttk.Button(main_frame, text="Browse...", command=self.select_base_dir); self.base_dir_button.grid(row=row_basedir, column=3, padx=10, pady=(10, 5))
+        ttk.Label(main_frame, text="Interpreter ID:").grid(row=row_id, column=0, sticky=tk.W, padx=10, pady=5)
         interpreter_ids = [f"{i:03d}" for i in range(1, 11)]
-        self.interpreter_id_combobox = ttk.Combobox(master, textvariable=self.selected_interpreter_id, values=interpreter_ids, width=43, state='disabled'); self.interpreter_id_combobox.grid(row=row_id, column=1, columnspan=2, padx=5, pady=5); self.interpreter_id_combobox.bind("<<ComboboxSelected>>", self.on_id_select)
-        ttk.Label(master, text="Category (Col A):").grid(row=row_cola, column=0, sticky=tk.W, padx=10, pady=5)
-        self.col_a_combobox = ttk.Combobox(master, textvariable=self.selected_col_a, width=43, state='disabled'); self.col_a_combobox.grid(row=row_cola, column=1, columnspan=2, padx=5, pady=5); self.col_a_combobox.bind("<<ComboboxSelected>>", self.on_col_a_select)
-        ttk.Label(master, text="Session/Item (Col B):").grid(row=row_colb, column=0, sticky=tk.W, padx=10, pady=5)
-        self.col_b_combobox = ttk.Combobox(master, textvariable=self.selected_col_b, width=43, state='disabled'); self.col_b_combobox.grid(row=row_colb, column=1, columnspan=2, padx=5, pady=5); self.col_b_combobox.bind("<<ComboboxSelected>>", self.on_col_b_select)
-        ttk.Label(master, text="Selected Files:").grid(row=row_fileselect, column=0, sticky=tk.W, padx=10, pady=5)
-        self.files_info_entry = ttk.Entry(master, textvariable=self.selected_files_info, width=45, state='readonly'); self.files_info_entry.grid(row=row_fileselect, column=1, columnspan=2, padx=5, pady=5)
-        self.select_files_button = ttk.Button(master, text="Select Files...", command=self.select_video_files, state='disabled'); self.select_files_button.grid(row=row_fileselect, column=3, padx=10, pady=5)
+        self.interpreter_id_combobox = ttk.Combobox(main_frame, textvariable=self.selected_interpreter_id, values=interpreter_ids, width=43, state='disabled'); self.interpreter_id_combobox.grid(row=row_id, column=1, columnspan=2, padx=5, pady=5); self.interpreter_id_combobox.bind("<<ComboboxSelected>>", self.on_id_select)
+        ttk.Label(main_frame, text="Category (Col A):").grid(row=row_cola, column=0, sticky=tk.W, padx=10, pady=5)
+        self.col_a_combobox = ttk.Combobox(main_frame, textvariable=self.selected_col_a, width=43, state='disabled'); self.col_a_combobox.grid(row=row_cola, column=1, columnspan=2, padx=5, pady=5); self.col_a_combobox.bind("<<ComboboxSelected>>", self.on_col_a_select)
+        ttk.Label(main_frame, text="Session/Item (Col B):").grid(row=row_colb, column=0, sticky=tk.W, padx=10, pady=5)
+        self.col_b_combobox = ttk.Combobox(main_frame, textvariable=self.selected_col_b, width=43, state='disabled'); self.col_b_combobox.grid(row=row_colb, column=1, columnspan=2, padx=5, pady=5); self.col_b_combobox.bind("<<ComboboxSelected>>", self.on_col_b_select)
+        ttk.Label(main_frame, text="Selected Files:").grid(row=row_fileselect, column=0, sticky=tk.W, padx=10, pady=5)
+        self.files_info_entry = ttk.Entry(main_frame, textvariable=self.selected_files_info, width=45, state='readonly'); self.files_info_entry.grid(row=row_fileselect, column=1, columnspan=2, padx=5, pady=5)
+        self.select_files_button = ttk.Button(main_frame, text="Select Files...", command=self.select_video_files, state='disabled'); self.select_files_button.grid(row=row_fileselect, column=3, padx=10, pady=5)
 
         # --- Verification Area (Animated Preview, Scores, Checkboxes) ---
-        ttk.Label(master, text="Review & Approve Takes:").grid(row=row_verification_area, column=0, sticky="nw", padx=10, pady=(10, 0))
-        self.verification_frame = ttk.Frame(master, borderwidth=1, relief="sunken"); self.verification_frame.grid(row=row_verification_area, column=1, columnspan=3, sticky="nsew", padx=10, pady=(5,5))
+        ttk.Label(main_frame, text="Review & Approve Takes:").grid(row=row_verification_area, column=0, sticky="nw", padx=10, pady=(15, 0)) # Increased top pady
+        self.verification_frame = ttk.Frame(main_frame, borderwidth=1, relief="sunken"); self.verification_frame.grid(row=row_verification_area, column=1, columnspan=3, sticky="nsew", padx=10, pady=(10,5))
 
         # Use single label per slot for animation
         self.preview_labels = []
@@ -133,17 +146,21 @@ class VideoPlacerApp:
             confirm_cb = ttk.Checkbutton(item_frame, text="Approve", variable=self.per_video_confirmed_vars[i], onvalue=True, offvalue=False, command=self.check_button_state, style="Confirm.TCheckbutton", state='disabled'); confirm_cb.pack(pady=(0,5)); self.confirm_checkboxes.append(confirm_cb)
 
         # Take Assignment Display
-        ttk.Label(master, textvariable=self.take_assignment_display, style="TakeAssign.TLabel").grid(row=row_analysis_info, column=1, columnspan=3, sticky="w", padx=10, pady=0)
+        ttk.Label(main_frame, textvariable=self.take_assignment_display, style="TakeAssign.TLabel").grid(row=row_analysis_info, column=1, columnspan=3, sticky="w", padx=10, pady=(5, 0))
 
         # Process Button
-        self.process_button = ttk.Button(master, text="Place Approved Files", command=self.process_selected_videos, state='disabled')
-        self.process_button.grid(row=row_processbtn, column=1, columnspan=2, pady=15)
+        self.process_button = ttk.Button(main_frame, text="Place Approved Files", command=self.process_selected_videos, state='disabled')
+        self.process_button.grid(row=row_processbtn, column=1, columnspan=2, pady=20) # Increased pady
 
         # Status Label
-        ttk.Label(master, textvariable=self.status_message, style="Status.TLabel").grid(row=row_status, column=0, columnspan=4, sticky="ew", padx=10, pady=10)
+        ttk.Label(main_frame, textvariable=self.status_message, style="Status.TLabel").grid(row=row_status, column=0, columnspan=4, sticky="ew", padx=10, pady=(10, 15)) # Increased bottom pady
 
-        # --- Configure Grid ---
-        master.columnconfigure(1, weight=1); master.columnconfigure(2, weight=1)
+        # --- Configure Grid (within main_frame) ---
+        main_frame.columnconfigure(1, weight=1); main_frame.columnconfigure(2, weight=1)
+        # Configure rows to allow verification frame to expand
+        main_frame.rowconfigure(row_verification_area, weight=1)
+
+        # --- Start Queue Checker & Bind Closing --- 
         self.master.after(100, self.check_analysis_queue) # Start queue checker
         # Bind closing event
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -281,7 +298,13 @@ class VideoPlacerApp:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
                 ret_key, frame_key = cap.read()
                 if ret_key and frame_key is not None:
-                    gray_frame = cv2.cvtColor(frame_key, cv2.COLOR_BGR2GRAY)
+                    # --- Crop to middle horizontal third ---
+                    height, width, _ = frame_key.shape
+                    start_col = width // 3
+                    end_col = 2 * width // 3
+                    cropped_frame_key = frame_key[:, start_col:end_col]
+                    # --- End Crop ---
+                    gray_frame = cv2.cvtColor(cropped_frame_key, cv2.COLOR_BGR2GRAY)
                     resized_gray_frame = cv2.resize(gray_frame, (SSIM_RESIZE_WIDTH, SSIM_RESIZE_HEIGHT), interpolation=cv2.INTER_AREA)
                     keyframes_for_ssim[kf_idx] = resized_gray_frame
                 else:
@@ -293,8 +316,31 @@ class VideoPlacerApp:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
                 ret_prev, frame_prev = cap.read()
                 if ret_prev and frame_prev is not None:
-                    preview_frame_resized = cv2.resize(frame_prev, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT), interpolation=cv2.INTER_AREA)
-                    preview_pil_images[pv_idx] = Image.fromarray(cv2.cvtColor(preview_frame_resized, cv2.COLOR_BGR2RGB))
+                    # --- Crop to middle horizontal third ---
+                    height, width, _ = frame_prev.shape
+                    start_col = width // 3
+                    end_col = 2 * width // 3
+                    cropped_frame_prev = frame_prev[:, start_col:end_col]
+                    # --- Calculate aspect ratio preserving resize --- 
+                    cropped_h, cropped_w, _ = cropped_frame_prev.shape
+                    if cropped_h > 0 and cropped_w > 0:
+                        aspect_ratio = cropped_w / cropped_h
+                        if THUMBNAIL_WIDTH / aspect_ratio <= THUMBNAIL_HEIGHT:
+                            final_w = THUMBNAIL_WIDTH
+                            final_h = int(final_w / aspect_ratio)
+                        else:
+                            final_h = THUMBNAIL_HEIGHT
+                            final_w = int(final_h * aspect_ratio)
+                        # Ensure dimensions are at least 1x1
+                        final_w = max(1, final_w)
+                        final_h = max(1, final_h)
+                        preview_frame_resized = cv2.resize(cropped_frame_prev, (final_w, final_h), interpolation=cv2.INTER_AREA)
+                        preview_pil_images[pv_idx] = Image.fromarray(cv2.cvtColor(preview_frame_resized, cv2.COLOR_BGR2RGB))
+                    else:
+                        # Handle cases with invalid dimensions (though unlikely after successful read)
+                        preview_pil_images[pv_idx] = None # Or a placeholder image
+                        error_messages.append(f"Invalid frame dimensions for preview {pv_idx+1}: {os.path.basename(video_path)}")
+                    # --- End Aspect Ratio Resize ---
                 else:
                     error_messages.append(f"Error reading preview frame {pv_idx+1}: {os.path.basename(video_path)}")
 

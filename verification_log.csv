@@ -1,0 +1,4 @@
+Timestamp,BaseDirectory,Category,Session,InterpreterID,NumFilesSelected,OriginalFileNames,PerVideoScores,PreMarkedConfirmation,FinalConfirmation,ProcessedIndices,AssignedTakeNumbers
+2025-04-19 00:30:21,/Users/administrator/Downloads/AI Dataset,ABC - One-Handed,B,006,4,006_4.mp4; 006_3.mp4; 006_2.mp4; 006_1.mp4,0.7348; 0.7774; 0.7849; 0.7767,False; True; True; True,True; True; True; True,0; 1; 2; 3,1; 2; 3; 4
+2025-04-19 00:30:48,/Users/administrator/Downloads/AI Dataset,ABC - One-Handed,A,006,4,006_4.mp4; 006_3.mp4; 006_2.mp4; 006_1.mp4,0.7770; 0.7852; 0.7777; 0.7345,True; True; True; False,True; True; True; False,0; 1; 2,1; 2; 3
+2025-04-19 00:31:09,/Users/administrator/Downloads/AI Dataset,ABC - One-Handed,A,006,1,006_1.mp4,1.0000,False,True,0,4
