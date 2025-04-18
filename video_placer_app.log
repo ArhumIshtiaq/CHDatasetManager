@@ -1,0 +1,995 @@
+2025-04-19 00:55:05,143 - INFO - MainThread - Logging configured. Application start.
+2025-04-19 00:55:05,143 - DEBUG - MainThread - Attempting to import dependencies: cv2, PIL, skimage, numpy
+2025-04-19 00:55:05,968 - DEBUG - MainThread - Dependencies imported successfully.
+2025-04-19 00:55:05,969 - DEBUG - MainThread - Entering __main__ block.
+2025-04-19 00:55:05,969 - DEBUG - MainThread - Dependencies confirmed available in __main__ namespace.
+2025-04-19 00:55:06,110 - INFO - MainThread - Initializing VideoPlacerApp GUI.
+2025-04-19 00:55:06,128 - DEBUG - MainThread - Window size set to 650x750, centered at (575,209) on screen 1800x1169.
+2025-04-19 00:55:06,128 - DEBUG - MainThread - State variable 'initial_setup_done' initialized to False.
+2025-04-19 00:55:06,128 - DEBUG - MainThread - Tkinter variables and state variables initialized.
+2025-04-19 00:55:06,128 - DEBUG - MainThread - Configured ttk styles.
+2025-04-19 00:55:06,128 - DEBUG - MainThread - Main frame created and packed.
+2025-04-19 00:55:06,129 - DEBUG - MainThread - Defined grid row assignments: basedir=0, id=1, colA=2, colB=3, fileselect=4, verification=5, analysis_info=6, process_btn=7, status=8
+2025-04-19 00:55:06,131 - DEBUG - MainThread - Base directory widgets placed.
+2025-04-19 00:55:06,131 - DEBUG - MainThread - Interpreter ID widgets placed.
+2025-04-19 00:55:06,131 - DEBUG - MainThread - Category (Col A) widgets placed.
+2025-04-19 00:55:06,131 - DEBUG - MainThread - Session/Item (Col B) widgets placed.
+2025-04-19 00:55:06,131 - DEBUG - MainThread - File selection widgets placed.
+2025-04-19 00:55:06,131 - DEBUG - MainThread - Verification area frame placed.
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Created 4 slots in verification frame (preview labels, score labels, checkboxes).
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Take assignment display label placed.
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Process button placed.
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Status label placed.
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Main frame grid configured for expansion.
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Started check_analysis_queue loop via master.after.
+2025-04-19 00:55:06,132 - DEBUG - MainThread - Bound on_closing method to window close event.
+2025-04-19 00:55:06,132 - INFO - MainThread - VideoPlacerApp GUI initialization complete.
+2025-04-19 00:55:06,132 - INFO - MainThread - Starting Tkinter main loop.
+2025-04-19 00:55:07,601 - DEBUG - MainThread - select_base_dir called.
+2025-04-19 00:55:10,769 - INFO - MainThread - Base directory selected: /Users/administrator/Downloads/AI Dataset
+2025-04-19 00:55:10,770 - DEBUG - MainThread - Enabled Interpreter ID combobox, disabled Base Dir button.
+2025-04-19 00:55:12,618 - DEBUG - MainThread - on_id_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:12,618 - INFO - MainThread - Interpreter ID selected: 003. Initial setup now complete.
+2025-04-19 00:55:12,618 - DEBUG - MainThread - Calling populate_col_a.
+2025-04-19 00:55:12,618 - DEBUG - MainThread - populate_col_a called.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Populated Col A combobox with 65 categories found in /Users/administrator/Downloads/AI Dataset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Col A and Col B selections cleared, Col B disabled.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - File selection cleared.
+2025-04-19 00:55:12,619 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Col B combobox state set to disabled.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - File select button state set to disabled.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:12,619 - DEBUG - MainThread - check_button_state called after ID selection.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - on_col_a_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:13,934 - INFO - MainThread - Category selected: Airport
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Col B selection and file selection cleared.
+2025-04-19 00:55:13,934 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - Calling populate_col_b.
+2025-04-19 00:55:13,934 - DEBUG - MainThread - populate_col_b called.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - Populated Col B combobox with 50 sessions/items found in /Users/administrator/Downloads/AI Dataset/Airport.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - Status message updated to Step 4.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - Status message updated.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - File select button disabled.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:13,935 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:13,936 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:13,936 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:13,936 - DEBUG - MainThread - File select button state set to disabled.
+2025-04-19 00:55:13,936 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:13,936 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:13,936 - DEBUG - MainThread - check_button_state called after Col A selection.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - on_col_b_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:15,601 - INFO - MainThread - Session/Item selected: Arrival
+2025-04-19 00:55:15,601 - DEBUG - MainThread - File selection cleared.
+2025-04-19 00:55:15,601 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - File select button enabled. Status updated to Step 5.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:15,601 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:15,602 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:15,602 - DEBUG - MainThread - check_button_state called after Col B selection.
+2025-04-19 00:55:16,398 - DEBUG - MainThread - select_video_files called.
+2025-04-19 00:55:16,398 - DEBUG - MainThread - Opening file dialog to select up to 4 video files.
+2025-04-19 00:55:20,775 - INFO - MainThread - User selected 4 file(s).
+2025-04-19 00:55:20,776 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Cleared previous analysis results and animations before new selection.
+2025-04-19 00:55:20,776 - INFO - MainThread - Selected 4 video files for analysis: 006_4.mp4; 006_3.mp4; 006_2.mp4; 006_1.mp4
+2025-04-19 00:55:20,776 - DEBUG - MainThread - File paths tuple updated: ('/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_4.mp4', '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_3.mp4', '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_2.mp4', '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_1.mp4')
+2025-04-19 00:55:20,776 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=True, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:20,776 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:20,776 - INFO - MainThread - Analysis started. Setting is_analysis_running to True.
+2025-04-19 00:55:20,776 - INFO - MainThread - Starting video analysis thread.
+2025-04-19 00:55:20,776 - INFO - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)) started for 4 videos.
+2025-04-19 00:55:20,777 - DEBUG - MainThread - Analysis thread started: Thread-1 (analyze_videos_thread)
+2025-04-19 00:55:20,777 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Starting parallel frame extraction using ThreadPoolExecutor.
+2025-04-19 00:55:20,777 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Attempting to extract frames from: 006_4.mp4
+2025-04-19 00:55:20,778 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Attempting to extract frames from: 006_3.mp4
+2025-04-19 00:55:20,779 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Attempting to extract frames from: 006_2.mp4
+2025-04-19 00:55:20,779 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Attempting to extract frames from: 006_1.mp4
+2025-04-19 00:55:20,779 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Submitted 4 extraction tasks.
+2025-04-19 00:55:20,807 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully opened video file: 006_2.mp4
+2025-04-19 00:55:20,807 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Frame count for 006_2.mp4: 90, FPS: 29.97
+2025-04-19 00:55:20,807 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Starting SSIM keyframe extraction for 006_2.mp4
+2025-04-19 00:55:20,807 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: SSIM Keyframe 1/5 (25.0%, frame 22) from 006_2.mp4
+2025-04-19 00:55:20,814 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully opened video file: 006_1.mp4
+2025-04-19 00:55:20,814 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Frame count for 006_1.mp4: 90, FPS: 29.97
+2025-04-19 00:55:20,814 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Starting SSIM keyframe extraction for 006_1.mp4
+2025-04-19 00:55:20,814 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: SSIM Keyframe 1/5 (25.0%, frame 22) from 006_1.mp4
+2025-04-19 00:55:20,822 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully opened video file: 006_4.mp4
+2025-04-19 00:55:20,822 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Frame count for 006_4.mp4: 90, FPS: 29.97
+2025-04-19 00:55:20,822 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Starting SSIM keyframe extraction for 006_4.mp4
+2025-04-19 00:55:20,822 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: SSIM Keyframe 1/5 (25.0%, frame 22) from 006_4.mp4
+2025-04-19 00:55:20,831 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully opened video file: 006_3.mp4
+2025-04-19 00:55:20,832 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Frame count for 006_3.mp4: 120, FPS: 29.97
+2025-04-19 00:55:20,832 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Starting SSIM keyframe extraction for 006_3.mp4
+2025-04-19 00:55:20,832 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: SSIM Keyframe 1/5 (25.0%, frame 30) from 006_3.mp4
+2025-04-19 00:55:20,846 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,860 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,864 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:20,864 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: SSIM Keyframe 2/5 (33.0%, frame 29) from 006_2.mp4
+2025-04-19 00:55:20,864 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:20,864 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: SSIM Keyframe 2/5 (33.0%, frame 29) from 006_1.mp4
+2025-04-19 00:55:20,878 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,879 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:20,879 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: SSIM Keyframe 2/5 (33.0%, frame 29) from 006_4.mp4
+2025-04-19 00:55:20,906 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,907 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:20,907 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: SSIM Keyframe 2/5 (33.0%, frame 39) from 006_3.mp4
+2025-04-19 00:55:20,917 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,920 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:20,920 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: SSIM Keyframe 3/5 (50.0%, frame 45) from 006_2.mp4
+2025-04-19 00:55:20,927 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,928 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:20,928 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: SSIM Keyframe 3/5 (50.0%, frame 45) from 006_1.mp4
+2025-04-19 00:55:20,966 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,968 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:20,968 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: SSIM Keyframe 3/5 (50.0%, frame 45) from 006_4.mp4
+2025-04-19 00:55:20,989 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,990 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:20,990 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: SSIM Keyframe 4/5 (66.0%, frame 59) from 006_2.mp4
+2025-04-19 00:55:20,996 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:20,997 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:20,998 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: SSIM Keyframe 4/5 (66.0%, frame 59) from 006_1.mp4
+2025-04-19 00:55:21,011 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,014 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:21,014 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: SSIM Keyframe 3/5 (50.0%, frame 60) from 006_3.mp4
+2025-04-19 00:55:21,032 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,035 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:21,035 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: SSIM Keyframe 4/5 (66.0%, frame 59) from 006_4.mp4
+2025-04-19 00:55:21,078 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,079 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:21,079 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: SSIM Keyframe 5/5 (75.0%, frame 67) from 006_2.mp4
+2025-04-19 00:55:21,082 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,083 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:21,083 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: SSIM Keyframe 5/5 (75.0%, frame 67) from 006_1.mp4
+2025-04-19 00:55:21,095 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,097 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:21,097 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: SSIM Keyframe 4/5 (66.0%, frame 79) from 006_3.mp4
+2025-04-19 00:55:21,149 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,150 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:21,150 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Finished SSIM keyframe extraction for 006_2.mp4.
+2025-04-19 00:55:21,150 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Starting preview frame extraction for 006_2.mp4
+2025-04-19 00:55:21,150 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Preview Frame 1/5 (25.0%, frame 22) from 006_2.mp4
+2025-04-19 00:55:21,164 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,165 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:21,165 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: SSIM Keyframe 5/5 (75.0%, frame 90) from 006_3.mp4
+2025-04-19 00:55:21,174 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,175 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:21,175 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Finished SSIM keyframe extraction for 006_1.mp4.
+2025-04-19 00:55:21,175 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Starting preview frame extraction for 006_1.mp4
+2025-04-19 00:55:21,175 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Preview Frame 1/5 (25.0%, frame 22) from 006_1.mp4
+2025-04-19 00:55:21,196 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,197 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:21,197 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: SSIM Keyframe 5/5 (75.0%, frame 67) from 006_4.mp4
+2025-04-19 00:55:21,235 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,238 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,240 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:21,240 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Finished SSIM keyframe extraction for 006_4.mp4.
+2025-04-19 00:55:21,240 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Starting preview frame extraction for 006_4.mp4
+2025-04-19 00:55:21,240 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Preview Frame 1/5 (25.0%, frame 22) from 006_4.mp4
+2025-04-19 00:55:21,246 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,252 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:21,252 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Preview Frame 2/5 (37.5%, frame 33) from 006_1.mp4
+2025-04-19 00:55:21,265 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,266 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:21,266 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Preview Frame 2/5 (37.5%, frame 33) from 006_2.mp4
+2025-04-19 00:55:21,274 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:21,274 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Preview Frame 2/5 (37.5%, frame 33) from 006_4.mp4
+2025-04-19 00:55:21,308 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,309 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:21,309 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Finished SSIM keyframe extraction for 006_3.mp4.
+2025-04-19 00:55:21,309 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Starting preview frame extraction for 006_3.mp4
+2025-04-19 00:55:21,309 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Preview Frame 1/5 (25.0%, frame 30) from 006_3.mp4
+2025-04-19 00:55:21,339 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,345 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:21,345 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Preview Frame 3/5 (50.0%, frame 45) from 006_1.mp4
+2025-04-19 00:55:21,351 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,356 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:21,356 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Preview Frame 3/5 (50.0%, frame 45) from 006_2.mp4
+2025-04-19 00:55:21,364 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,369 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:21,369 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Preview Frame 2/5 (37.5%, frame 45) from 006_3.mp4
+2025-04-19 00:55:21,384 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,403 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,409 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,410 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:21,410 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Preview Frame 4/5 (62.5%, frame 56) from 006_2.mp4
+2025-04-19 00:55:21,410 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:21,410 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Preview Frame 4/5 (62.5%, frame 56) from 006_1.mp4
+2025-04-19 00:55:21,416 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:21,416 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Preview Frame 3/5 (50.0%, frame 60) from 006_3.mp4
+2025-04-19 00:55:21,457 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,464 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:21,464 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Preview Frame 3/5 (50.0%, frame 45) from 006_4.mp4
+2025-04-19 00:55:21,473 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,476 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:21,476 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Preview Frame 5/5 (75.0%, frame 67) from 006_2.mp4
+2025-04-19 00:55:21,486 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,491 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:21,491 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Preview Frame 4/5 (62.5%, frame 56) from 006_4.mp4
+2025-04-19 00:55:21,521 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,524 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,527 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:21,527 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Preview Frame 4/5 (62.5%, frame 75) from 006_3.mp4
+2025-04-19 00:55:21,527 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,529 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:21,529 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Preview Frame 5/5 (75.0%, frame 67) from 006_1.mp4
+2025-04-19 00:55:21,534 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:21,534 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Preview Frame 5/5 (75.0%, frame 67) from 006_4.mp4
+2025-04-19 00:55:21,583 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,588 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,593 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:21,593 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Finished preview frame extraction for 006_1.mp4.
+2025-04-19 00:55:21,594 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,595 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:21,595 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Finished preview frame extraction for 006_2.mp4.
+2025-04-19 00:55:21,599 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Released video capture for: 006_2.mp4
+2025-04-19 00:55:21,599 - DEBUG - ThreadPoolExecutor-0_2 - Thread ThreadPoolExecutor-0_2: Finished frame extraction process for: 006_2.mp4.
+2025-04-19 00:55:21,599 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Extraction task for '006_2.mp4' (index 2) completed successfully.
+2025-04-19 00:55:21,600 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:21,600 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Preview Frame 5/5 (75.0%, frame 90) from 006_3.mp4
+2025-04-19 00:55:21,601 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Released video capture for: 006_1.mp4
+2025-04-19 00:55:21,601 - DEBUG - ThreadPoolExecutor-0_3 - Thread ThreadPoolExecutor-0_3: Finished frame extraction process for: 006_1.mp4.
+2025-04-19 00:55:21,602 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Extraction task for '006_1.mp4' (index 3) completed successfully.
+2025-04-19 00:55:21,622 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,630 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:21,630 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Finished preview frame extraction for 006_4.mp4.
+2025-04-19 00:55:21,638 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Released video capture for: 006_4.mp4
+2025-04-19 00:55:21,638 - DEBUG - ThreadPoolExecutor-0_0 - Thread ThreadPoolExecutor-0_0: Finished frame extraction process for: 006_4.mp4.
+2025-04-19 00:55:21,639 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Extraction task for '006_4.mp4' (index 0) completed successfully.
+2025-04-19 00:55:21,643 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:21,650 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:21,650 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Finished preview frame extraction for 006_3.mp4.
+2025-04-19 00:55:21,674 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Released video capture for: 006_3.mp4
+2025-04-19 00:55:21,674 - DEBUG - ThreadPoolExecutor-0_1 - Thread ThreadPoolExecutor-0_1: Finished frame extraction process for: 006_3.mp4.
+2025-04-19 00:55:21,674 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Extraction task for '006_3.mp4' (index 1) completed successfully.
+2025-04-19 00:55:21,675 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Unpacking extraction results.
+2025-04-19 00:55:21,675 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Starting SSIM score calculation.
+2025-04-19 00:55:21,675 - DEBUG - Thread-1 (analyze_videos_thread) - Calculating SSIM scores for 4 videos.
+2025-04-19 00:55:21,675 - DEBUG - Thread-1 (analyze_videos_thread) - Found 4 videos with all required keyframes for SSIM: [0, 1, 2, 3]
+2025-04-19 00:55:21,675 - DEBUG - Thread-1 (analyze_videos_thread) - Starting SSIM pairwise comparison across keyframes for valid videos.
+2025-04-19 00:55:21,678 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (0, 1) = 0.6556
+2025-04-19 00:55:21,679 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (0, 1) = 0.6518
+2025-04-19 00:55:21,681 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (0, 1) = 0.6943
+2025-04-19 00:55:21,682 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (0, 1) = 0.7773
+2025-04-19 00:55:21,683 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (0, 1) = 0.7950
+2025-04-19 00:55:21,683 - DEBUG - Thread-1 (analyze_videos_thread) -   Average SSIM for Pair (0, 1) over 5 keyframes = 0.7148
+2025-04-19 00:55:21,684 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (0, 2) = 0.7364
+2025-04-19 00:55:21,685 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (0, 2) = 0.7530
+2025-04-19 00:55:21,686 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (0, 2) = 0.7865
+2025-04-19 00:55:21,690 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (0, 2) = 0.7621
+2025-04-19 00:55:21,691 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (0, 2) = 0.7610
+2025-04-19 00:55:21,691 - DEBUG - Thread-1 (analyze_videos_thread) -   Average SSIM for Pair (0, 2) over 5 keyframes = 0.7598
+2025-04-19 00:55:21,692 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (0, 3) = 0.6924
+2025-04-19 00:55:21,693 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (0, 3) = 0.6645
+2025-04-19 00:55:21,694 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (0, 3) = 0.7875
+2025-04-19 00:55:21,695 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (0, 3) = 0.7622
+2025-04-19 00:55:21,695 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (0, 3) = 0.7428
+2025-04-19 00:55:21,696 - DEBUG - Thread-1 (analyze_videos_thread) -   Average SSIM for Pair (0, 3) over 5 keyframes = 0.7299
+2025-04-19 00:55:21,696 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (1, 2) = 0.7313
+2025-04-19 00:55:21,697 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (1, 2) = 0.7524
+2025-04-19 00:55:21,699 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (1, 2) = 0.7343
+2025-04-19 00:55:21,701 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (1, 2) = 0.8985
+2025-04-19 00:55:21,702 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (1, 2) = 0.9131
+2025-04-19 00:55:21,702 - DEBUG - Thread-1 (analyze_videos_thread) -   Average SSIM for Pair (1, 2) over 5 keyframes = 0.8059
+2025-04-19 00:55:21,703 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (1, 3) = 0.7398
+2025-04-19 00:55:21,704 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (1, 3) = 0.8510
+2025-04-19 00:55:21,705 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (1, 3) = 0.7554
+2025-04-19 00:55:21,705 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (1, 3) = 0.8282
+2025-04-19 00:55:21,706 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (1, 3) = 0.8830
+2025-04-19 00:55:21,706 - DEBUG - Thread-1 (analyze_videos_thread) -   Average SSIM for Pair (1, 3) over 5 keyframes = 0.8115
+2025-04-19 00:55:21,707 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (2, 3) = 0.6958
+2025-04-19 00:55:21,709 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (2, 3) = 0.7614
+2025-04-19 00:55:21,713 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (2, 3) = 0.7321
+2025-04-19 00:55:21,714 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (2, 3) = 0.8277
+2025-04-19 00:55:21,715 - DEBUG - Thread-1 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (2, 3) = 0.9270
+2025-04-19 00:55:21,715 - DEBUG - Thread-1 (analyze_videos_thread) -   Average SSIM for Pair (2, 3) over 5 keyframes = 0.7888
+2025-04-19 00:55:21,715 - INFO - Thread-1 (analyze_videos_thread) - Final Average SSIM for Video 0 ('006_4.mp4'): 0.7348 (based on 3 pairs)
+2025-04-19 00:55:21,715 - INFO - Thread-1 (analyze_videos_thread) - Final Average SSIM for Video 1 ('006_3.mp4'): 0.7774 (based on 3 pairs)
+2025-04-19 00:55:21,715 - INFO - Thread-1 (analyze_videos_thread) - Final Average SSIM for Video 2 ('006_2.mp4'): 0.7849 (based on 3 pairs)
+2025-04-19 00:55:21,715 - INFO - Thread-1 (analyze_videos_thread) - Final Average SSIM for Video 3 ('006_1.mp4'): 0.7767 (based on 3 pairs)
+2025-04-19 00:55:21,715 - DEBUG - Thread-1 (analyze_videos_thread) - Finished SSIM score calculation.
+2025-04-19 00:55:21,715 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): SSIM score calculation completed successfully.
+2025-04-19 00:55:21,715 - DEBUG - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)): Putting results into analysis queue.
+2025-04-19 00:55:21,715 - INFO - Thread-1 (analyze_videos_thread) - Analysis thread (Thread-1 (analyze_videos_thread)) finished and results put in queue.
+2025-04-19 00:55:21,734 - INFO - MainThread - Received message from analysis queue.
+2025-04-19 00:55:21,734 - INFO - MainThread - Processing 'analysis_complete' message.
+2025-04-19 00:55:21,734 - DEBUG - MainThread - is_analysis_running set to False.
+2025-04-19 00:55:21,734 - DEBUG - MainThread - Received scores: [0.7348175482067733, 0.7774004081119834, 0.7848557069583845, 0.7767212348012297]
+2025-04-19 00:55:21,734 - DEBUG - MainThread - Received errors: []
+2025-04-19 00:55:21,734 - DEBUG - MainThread - Received previews list structure: 4 lists of previews.
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Updating score display labels.
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Valid scores for pre-marking: [0.7348175482067733, 0.7774004081119834, 0.7848557069583845, 0.7767212348012297], Max Score: 0.785
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Set score for slot 0: 0.735
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Set score for slot 1: 0.777
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Set score for slot 2: 0.785
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Set score for slot 3: 0.777
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Creating PhotoImage objects and configuring checkboxes.
+2025-04-19 00:55:21,735 - DEBUG - MainThread - Processing preview images for slot 0. Found 5 potential PIL images.
+2025-04-19 00:55:21,742 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 0.
+2025-04-19 00:55:21,742 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 0.
+2025-04-19 00:55:21,742 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 0.
+2025-04-19 00:55:21,742 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Checkbox for slot 0 set to state 'normal'.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Starting preview animation for slot 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Attempting to start/restart animation for slot 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Reset animation index for slot 0 to 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Starting animation update cycle for slot 0 with 5 valid frames.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Processing preview images for slot 1. Found 5 potential PIL images.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Checkbox for slot 1 set to state 'normal'.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Starting preview animation for slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Attempting to start/restart animation for slot 1.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Reset animation index for slot 1 to 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Starting animation update cycle for slot 1 with 5 valid frames.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Processing preview images for slot 2. Found 5 potential PIL images.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Checkbox for slot 2 set to state 'normal'.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Starting preview animation for slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Attempting to start/restart animation for slot 2.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Reset animation index for slot 2 to 0.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Starting animation update cycle for slot 2 with 5 valid frames.
+2025-04-19 00:55:21,743 - DEBUG - MainThread - Processing preview images for slot 3. Found 5 potential PIL images.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Checkbox for slot 3 set to state 'normal'.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Starting preview animation for slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Attempting to start/restart animation for slot 3.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Reset animation index for slot 3 to 0.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Starting animation update cycle for slot 3 with 5 valid frames.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Starting pre-marking process.
+2025-04-19 00:55:21,744 - INFO - MainThread - Pre-marking logic: 4 videos selected, 4 valid scores. MaxScore=0.785, SD=0.020, Threshold=0.775
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Video index 0 ('006_4.mp4') not pre-marked. Score 0.7348175482067733 (is None=False). Threshold check: False | False. Checkbox state was 'normal'.
+2025-04-19 00:55:21,744 - INFO - MainThread - Pre-marking video index 1 ('006_3.mp4') - Score 0.777 >= Threshold 0.775 or 0.85. Checkbox state was 'normal'.
+2025-04-19 00:55:21,744 - INFO - MainThread - Pre-marking video index 2 ('006_2.mp4') - Score 0.785 >= Threshold 0.775 or 0.85. Checkbox state was 'normal'.
+2025-04-19 00:55:21,744 - INFO - MainThread - Pre-marking video index 3 ('006_1.mp4') - Score 0.777 >= Threshold 0.775 or 0.85. Checkbox state was 'normal'.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Stored initial confirmation state after pre-marking: [False, True, True, True]
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Valid previews found. Calculating take assignment.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - calculate_and_display_take_assignment called.
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Checking existing takes in target folder: /Users/administrator/Downloads/AI Dataset/Airport/Arrival/003
+2025-04-19 00:55:21,744 - DEBUG - MainThread - Checking files in '/Users/administrator/Downloads/AI Dataset/Airport/Arrival/003' for pattern '003_([1-4])\..+$'.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Found 0 items in target folder.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Highest existing take found: 0. Calculated starting take: 1.
+2025-04-19 00:55:21,745 - INFO - MainThread - Calculated potential takes: 1-4 for 4 selected files.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Finished take assignment calculation.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:21,745 - DEBUG - MainThread - check_button_state called after analysis results processed.
+2025-04-19 00:55:25,274 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:25,274 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:25,274 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:25,275 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:25,275 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:25,275 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:25,275 - DEBUG - MainThread - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-04-19 00:55:25,275 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - on_col_a_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:29,200 - INFO - MainThread - Category selected: ABC - One-Handed
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Col B selection and file selection cleared.
+2025-04-19 00:55:29,200 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cancelled animation 'after' job for slot 0.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cancelled animation 'after' job for slot 1.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cancelled animation 'after' job for slot 2.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cancelled animation 'after' job for slot 3.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:29,200 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Calling populate_col_b.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - populate_col_b called.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Populated Col B combobox with 26 sessions/items found in /Users/administrator/Downloads/AI Dataset/ABC - One-Handed.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Status message updated to Step 4.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Status message updated.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - File select button disabled.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - File select button state set to disabled.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:29,201 - DEBUG - MainThread - check_button_state called after Col A selection.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - on_col_b_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:31,151 - INFO - MainThread - Session/Item selected: A
+2025-04-19 00:55:31,151 - DEBUG - MainThread - File selection cleared.
+2025-04-19 00:55:31,151 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - File select button enabled. Status updated to Step 5.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:31,151 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:31,152 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:31,152 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:31,152 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:31,152 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:31,152 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:31,152 - DEBUG - MainThread - check_button_state called after Col B selection.
+2025-04-19 00:55:31,499 - DEBUG - MainThread - select_video_files called.
+2025-04-19 00:55:31,499 - DEBUG - MainThread - Opening file dialog to select up to 4 video files.
+2025-04-19 00:55:36,451 - INFO - MainThread - User selected 4 file(s).
+2025-04-19 00:55:36,451 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Cleared previous analysis results and animations before new selection.
+2025-04-19 00:55:36,451 - INFO - MainThread - Selected 4 video files for analysis: 006_4.mp4; 006_3.mp4; 006_2.mp4; 006_1.mp4
+2025-04-19 00:55:36,451 - DEBUG - MainThread - File paths tuple updated: ('/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_4.mp4', '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_3.mp4', '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_2.mp4', '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/006/006_1.mp4')
+2025-04-19 00:55:36,451 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:36,451 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=True, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:36,452 - INFO - MainThread - Analysis started. Setting is_analysis_running to True.
+2025-04-19 00:55:36,452 - INFO - MainThread - Starting video analysis thread.
+2025-04-19 00:55:36,452 - INFO - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)) started for 4 videos.
+2025-04-19 00:55:36,452 - DEBUG - MainThread - Analysis thread started: Thread-2 (analyze_videos_thread)
+2025-04-19 00:55:36,452 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Starting parallel frame extraction using ThreadPoolExecutor.
+2025-04-19 00:55:36,453 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Attempting to extract frames from: 006_4.mp4
+2025-04-19 00:55:36,454 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Attempting to extract frames from: 006_3.mp4
+2025-04-19 00:55:36,454 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Attempting to extract frames from: 006_2.mp4
+2025-04-19 00:55:36,454 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Attempting to extract frames from: 006_1.mp4
+2025-04-19 00:55:36,454 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Submitted 4 extraction tasks.
+2025-04-19 00:55:36,463 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully opened video file: 006_4.mp4
+2025-04-19 00:55:36,463 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Frame count for 006_4.mp4: 90, FPS: 29.97
+2025-04-19 00:55:36,463 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Starting SSIM keyframe extraction for 006_4.mp4
+2025-04-19 00:55:36,463 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: SSIM Keyframe 1/5 (25.0%, frame 22) from 006_4.mp4
+2025-04-19 00:55:36,473 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully opened video file: 006_3.mp4
+2025-04-19 00:55:36,473 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Frame count for 006_3.mp4: 120, FPS: 29.97
+2025-04-19 00:55:36,473 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Starting SSIM keyframe extraction for 006_3.mp4
+2025-04-19 00:55:36,473 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: SSIM Keyframe 1/5 (25.0%, frame 30) from 006_3.mp4
+2025-04-19 00:55:36,480 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully opened video file: 006_1.mp4
+2025-04-19 00:55:36,480 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Frame count for 006_1.mp4: 90, FPS: 29.97
+2025-04-19 00:55:36,480 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Starting SSIM keyframe extraction for 006_1.mp4
+2025-04-19 00:55:36,480 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: SSIM Keyframe 1/5 (25.0%, frame 22) from 006_1.mp4
+2025-04-19 00:55:36,487 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully opened video file: 006_2.mp4
+2025-04-19 00:55:36,487 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Frame count for 006_2.mp4: 90, FPS: 29.97
+2025-04-19 00:55:36,487 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Starting SSIM keyframe extraction for 006_2.mp4
+2025-04-19 00:55:36,487 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: SSIM Keyframe 1/5 (25.0%, frame 22) from 006_2.mp4
+2025-04-19 00:55:36,498 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,499 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:36,499 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: SSIM Keyframe 2/5 (33.0%, frame 29) from 006_4.mp4
+2025-04-19 00:55:36,517 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,518 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:36,518 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: SSIM Keyframe 2/5 (33.0%, frame 39) from 006_3.mp4
+2025-04-19 00:55:36,534 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,535 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:36,535 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: SSIM Keyframe 2/5 (33.0%, frame 29) from 006_1.mp4
+2025-04-19 00:55:36,536 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,537 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:36,537 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: SSIM Keyframe 3/5 (50.0%, frame 45) from 006_4.mp4
+2025-04-19 00:55:36,541 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped SSIM frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,542 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 1 to 160x90.
+2025-04-19 00:55:36,542 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: SSIM Keyframe 2/5 (33.0%, frame 29) from 006_2.mp4
+2025-04-19 00:55:36,566 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,567 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:36,567 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: SSIM Keyframe 3/5 (50.0%, frame 60) from 006_3.mp4
+2025-04-19 00:55:36,575 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,576 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:36,576 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: SSIM Keyframe 4/5 (66.0%, frame 59) from 006_4.mp4
+2025-04-19 00:55:36,585 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,586 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:36,586 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: SSIM Keyframe 3/5 (50.0%, frame 45) from 006_1.mp4
+2025-04-19 00:55:36,598 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped SSIM frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,599 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 2 to 160x90.
+2025-04-19 00:55:36,599 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: SSIM Keyframe 3/5 (50.0%, frame 45) from 006_2.mp4
+2025-04-19 00:55:36,640 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,641 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:36,641 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: SSIM Keyframe 4/5 (66.0%, frame 79) from 006_3.mp4
+2025-04-19 00:55:36,642 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,643 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:36,643 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: SSIM Keyframe 4/5 (66.0%, frame 59) from 006_1.mp4
+2025-04-19 00:55:36,649 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped SSIM frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,650 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 3 to 160x90.
+2025-04-19 00:55:36,650 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: SSIM Keyframe 4/5 (66.0%, frame 59) from 006_2.mp4
+2025-04-19 00:55:36,675 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,676 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:36,676 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: SSIM Keyframe 5/5 (75.0%, frame 90) from 006_3.mp4
+2025-04-19 00:55:36,695 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,695 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:36,696 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: SSIM Keyframe 5/5 (75.0%, frame 67) from 006_1.mp4
+2025-04-19 00:55:36,696 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,697 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:36,697 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: SSIM Keyframe 5/5 (75.0%, frame 67) from 006_4.mp4
+2025-04-19 00:55:36,704 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped SSIM frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,704 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 4 to 160x90.
+2025-04-19 00:55:36,705 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: SSIM Keyframe 5/5 (75.0%, frame 67) from 006_2.mp4
+2025-04-19 00:55:36,736 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,737 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:36,737 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Finished SSIM keyframe extraction for 006_3.mp4.
+2025-04-19 00:55:36,737 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Starting preview frame extraction for 006_3.mp4
+2025-04-19 00:55:36,737 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Preview Frame 1/5 (25.0%, frame 30) from 006_3.mp4
+2025-04-19 00:55:36,765 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,766 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:36,766 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Finished SSIM keyframe extraction for 006_4.mp4.
+2025-04-19 00:55:36,766 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Starting preview frame extraction for 006_4.mp4
+2025-04-19 00:55:36,766 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Preview Frame 1/5 (25.0%, frame 22) from 006_4.mp4
+2025-04-19 00:55:36,789 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,792 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,793 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:36,793 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Finished SSIM keyframe extraction for 006_1.mp4.
+2025-04-19 00:55:36,793 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Starting preview frame extraction for 006_1.mp4
+2025-04-19 00:55:36,793 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Preview Frame 1/5 (25.0%, frame 22) from 006_1.mp4
+2025-04-19 00:55:36,794 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:36,794 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Preview Frame 2/5 (37.5%, frame 45) from 006_3.mp4
+2025-04-19 00:55:36,807 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped SSIM frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,807 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, grayed, and resized SSIM keyframe 5 to 160x90.
+2025-04-19 00:55:36,807 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Finished SSIM keyframe extraction for 006_2.mp4.
+2025-04-19 00:55:36,807 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Starting preview frame extraction for 006_2.mp4
+2025-04-19 00:55:36,807 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Preview Frame 1/5 (25.0%, frame 22) from 006_2.mp4
+2025-04-19 00:55:36,847 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,850 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,851 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:36,851 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Preview Frame 2/5 (37.5%, frame 33) from 006_4.mp4
+2025-04-19 00:55:36,854 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:36,854 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Preview Frame 2/5 (37.5%, frame 33) from 006_1.mp4
+2025-04-19 00:55:36,857 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped preview frame 1 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,862 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, and resized preview frame 1 to 53x90.
+2025-04-19 00:55:36,862 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Preview Frame 2/5 (37.5%, frame 33) from 006_2.mp4
+2025-04-19 00:55:36,911 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,916 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:36,916 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Preview Frame 3/5 (50.0%, frame 45) from 006_1.mp4
+2025-04-19 00:55:36,933 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,933 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,936 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:36,936 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Preview Frame 3/5 (50.0%, frame 45) from 006_4.mp4
+2025-04-19 00:55:36,939 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:36,939 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Preview Frame 3/5 (50.0%, frame 45) from 006_2.mp4
+2025-04-19 00:55:36,955 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped preview frame 2 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,961 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, and resized preview frame 2 to 53x90.
+2025-04-19 00:55:36,961 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Preview Frame 3/5 (50.0%, frame 60) from 006_3.mp4
+2025-04-19 00:55:36,972 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,978 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:36,979 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Preview Frame 4/5 (62.5%, frame 56) from 006_1.mp4
+2025-04-19 00:55:36,993 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,999 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:36,999 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:36,999 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Preview Frame 4/5 (62.5%, frame 56) from 006_4.mp4
+2025-04-19 00:55:37,002 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:37,003 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Preview Frame 4/5 (62.5%, frame 56) from 006_2.mp4
+2025-04-19 00:55:37,044 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped preview frame 3 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,049 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, and resized preview frame 3 to 53x90.
+2025-04-19 00:55:37,049 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Preview Frame 4/5 (62.5%, frame 75) from 006_3.mp4
+2025-04-19 00:55:37,057 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,063 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:37,064 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Preview Frame 5/5 (75.0%, frame 67) from 006_1.mp4
+2025-04-19 00:55:37,084 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,086 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,089 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped preview frame 4 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,089 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:37,089 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Preview Frame 5/5 (75.0%, frame 90) from 006_3.mp4
+2025-04-19 00:55:37,094 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:37,098 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, and resized preview frame 4 to 53x90.
+2025-04-19 00:55:37,098 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Preview Frame 5/5 (75.0%, frame 67) from 006_4.mp4
+2025-04-19 00:55:37,098 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Preview Frame 5/5 (75.0%, frame 67) from 006_2.mp4
+2025-04-19 00:55:37,124 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,128 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:37,128 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Finished preview frame extraction for 006_3.mp4.
+2025-04-19 00:55:37,132 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Released video capture for: 006_3.mp4
+2025-04-19 00:55:37,132 - DEBUG - ThreadPoolExecutor-1_1 - Thread ThreadPoolExecutor-1_1: Finished frame extraction process for: 006_3.mp4.
+2025-04-19 00:55:37,132 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Extraction task for '006_3.mp4' (index 1) completed successfully.
+2025-04-19 00:55:37,155 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,162 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:37,162 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Finished preview frame extraction for 006_1.mp4.
+2025-04-19 00:55:37,168 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Released video capture for: 006_1.mp4
+2025-04-19 00:55:37,168 - DEBUG - ThreadPoolExecutor-1_3 - Thread ThreadPoolExecutor-1_3: Finished frame extraction process for: 006_1.mp4.
+2025-04-19 00:55:37,169 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Extraction task for '006_1.mp4' (index 3) completed successfully.
+2025-04-19 00:55:37,175 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,179 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:37,179 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Finished preview frame extraction for 006_2.mp4.
+2025-04-19 00:55:37,194 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Cropped preview frame 5 from 1920x1080 to 640x1080.
+2025-04-19 00:55:37,195 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Released video capture for: 006_2.mp4
+2025-04-19 00:55:37,195 - DEBUG - ThreadPoolExecutor-1_2 - Thread ThreadPoolExecutor-1_2: Finished frame extraction process for: 006_2.mp4.
+2025-04-19 00:55:37,196 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Extraction task for '006_2.mp4' (index 2) completed successfully.
+2025-04-19 00:55:37,201 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Successfully extracted, cropped, and resized preview frame 5 to 53x90.
+2025-04-19 00:55:37,201 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Finished preview frame extraction for 006_4.mp4.
+2025-04-19 00:55:37,219 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Released video capture for: 006_4.mp4
+2025-04-19 00:55:37,219 - DEBUG - ThreadPoolExecutor-1_0 - Thread ThreadPoolExecutor-1_0: Finished frame extraction process for: 006_4.mp4.
+2025-04-19 00:55:37,220 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Extraction task for '006_4.mp4' (index 0) completed successfully.
+2025-04-19 00:55:37,221 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Unpacking extraction results.
+2025-04-19 00:55:37,221 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Starting SSIM score calculation.
+2025-04-19 00:55:37,221 - DEBUG - Thread-2 (analyze_videos_thread) - Calculating SSIM scores for 4 videos.
+2025-04-19 00:55:37,221 - DEBUG - Thread-2 (analyze_videos_thread) - Found 4 videos with all required keyframes for SSIM: [0, 1, 2, 3]
+2025-04-19 00:55:37,221 - DEBUG - Thread-2 (analyze_videos_thread) - Starting SSIM pairwise comparison across keyframes for valid videos.
+2025-04-19 00:55:37,224 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (0, 1) = 0.6556
+2025-04-19 00:55:37,225 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (0, 1) = 0.6518
+2025-04-19 00:55:37,227 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (0, 1) = 0.6943
+2025-04-19 00:55:37,228 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (0, 1) = 0.7773
+2025-04-19 00:55:37,229 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (0, 1) = 0.7950
+2025-04-19 00:55:37,229 - DEBUG - Thread-2 (analyze_videos_thread) -   Average SSIM for Pair (0, 1) over 5 keyframes = 0.7148
+2025-04-19 00:55:37,230 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (0, 2) = 0.7364
+2025-04-19 00:55:37,231 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (0, 2) = 0.7530
+2025-04-19 00:55:37,232 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (0, 2) = 0.7865
+2025-04-19 00:55:37,233 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (0, 2) = 0.7621
+2025-04-19 00:55:37,234 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (0, 2) = 0.7610
+2025-04-19 00:55:37,234 - DEBUG - Thread-2 (analyze_videos_thread) -   Average SSIM for Pair (0, 2) over 5 keyframes = 0.7598
+2025-04-19 00:55:37,235 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (0, 3) = 0.6924
+2025-04-19 00:55:37,236 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (0, 3) = 0.6645
+2025-04-19 00:55:37,237 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (0, 3) = 0.7875
+2025-04-19 00:55:37,238 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (0, 3) = 0.7622
+2025-04-19 00:55:37,239 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (0, 3) = 0.7428
+2025-04-19 00:55:37,239 - DEBUG - Thread-2 (analyze_videos_thread) -   Average SSIM for Pair (0, 3) over 5 keyframes = 0.7299
+2025-04-19 00:55:37,240 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (1, 2) = 0.7313
+2025-04-19 00:55:37,245 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (1, 2) = 0.7524
+2025-04-19 00:55:37,249 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (1, 2) = 0.7343
+2025-04-19 00:55:37,250 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (1, 2) = 0.8985
+2025-04-19 00:55:37,251 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (1, 2) = 0.9131
+2025-04-19 00:55:37,251 - DEBUG - Thread-2 (analyze_videos_thread) -   Average SSIM for Pair (1, 2) over 5 keyframes = 0.8059
+2025-04-19 00:55:37,252 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (1, 3) = 0.7398
+2025-04-19 00:55:37,253 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (1, 3) = 0.8510
+2025-04-19 00:55:37,254 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (1, 3) = 0.7554
+2025-04-19 00:55:37,257 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (1, 3) = 0.8282
+2025-04-19 00:55:37,260 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (1, 3) = 0.8830
+2025-04-19 00:55:37,260 - DEBUG - Thread-2 (analyze_videos_thread) -   Average SSIM for Pair (1, 3) over 5 keyframes = 0.8115
+2025-04-19 00:55:37,261 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 1: Pair (2, 3) = 0.6958
+2025-04-19 00:55:37,262 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 2: Pair (2, 3) = 0.7614
+2025-04-19 00:55:37,263 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 3: Pair (2, 3) = 0.7321
+2025-04-19 00:55:37,264 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 4: Pair (2, 3) = 0.8277
+2025-04-19 00:55:37,265 - DEBUG - Thread-2 (analyze_videos_thread) -   SSIM Keyframe 5: Pair (2, 3) = 0.9270
+2025-04-19 00:55:37,265 - DEBUG - Thread-2 (analyze_videos_thread) -   Average SSIM for Pair (2, 3) over 5 keyframes = 0.7888
+2025-04-19 00:55:37,265 - INFO - Thread-2 (analyze_videos_thread) - Final Average SSIM for Video 0 ('006_4.mp4'): 0.7348 (based on 3 pairs)
+2025-04-19 00:55:37,265 - INFO - Thread-2 (analyze_videos_thread) - Final Average SSIM for Video 1 ('006_3.mp4'): 0.7774 (based on 3 pairs)
+2025-04-19 00:55:37,265 - INFO - Thread-2 (analyze_videos_thread) - Final Average SSIM for Video 2 ('006_2.mp4'): 0.7849 (based on 3 pairs)
+2025-04-19 00:55:37,265 - INFO - Thread-2 (analyze_videos_thread) - Final Average SSIM for Video 3 ('006_1.mp4'): 0.7767 (based on 3 pairs)
+2025-04-19 00:55:37,265 - DEBUG - Thread-2 (analyze_videos_thread) - Finished SSIM score calculation.
+2025-04-19 00:55:37,265 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): SSIM score calculation completed successfully.
+2025-04-19 00:55:37,265 - DEBUG - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)): Putting results into analysis queue.
+2025-04-19 00:55:37,265 - INFO - Thread-2 (analyze_videos_thread) - Analysis thread (Thread-2 (analyze_videos_thread)) finished and results put in queue.
+2025-04-19 00:55:37,286 - INFO - MainThread - Received message from analysis queue.
+2025-04-19 00:55:37,286 - INFO - MainThread - Processing 'analysis_complete' message.
+2025-04-19 00:55:37,286 - DEBUG - MainThread - is_analysis_running set to False.
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Received scores: [0.7348175482067733, 0.7774004081119834, 0.7848557069583845, 0.7767212348012297]
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Received errors: []
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Received previews list structure: 4 lists of previews.
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Updating score display labels.
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Valid scores for pre-marking: [0.7348175482067733, 0.7774004081119834, 0.7848557069583845, 0.7767212348012297], Max Score: 0.785
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Set score for slot 0: 0.735
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Set score for slot 1: 0.777
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Set score for slot 2: 0.785
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Set score for slot 3: 0.777
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Creating PhotoImage objects and configuring checkboxes.
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Processing preview images for slot 0. Found 5 potential PIL images.
+2025-04-19 00:55:37,286 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Checkbox for slot 0 set to state 'normal'.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Starting preview animation for slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Attempting to start/restart animation for slot 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Reset animation index for slot 0 to 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Starting animation update cycle for slot 0 with 5 valid frames.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Processing preview images for slot 1. Found 5 potential PIL images.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Checkbox for slot 1 set to state 'normal'.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Starting preview animation for slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Attempting to start/restart animation for slot 1.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Reset animation index for slot 1 to 0.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Starting animation update cycle for slot 1 with 5 valid frames.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Processing preview images for slot 2. Found 5 potential PIL images.
+2025-04-19 00:55:37,287 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Checkbox for slot 2 set to state 'normal'.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Starting preview animation for slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Attempting to start/restart animation for slot 2.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Reset animation index for slot 2 to 0.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Starting animation update cycle for slot 2 with 5 valid frames.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Processing preview images for slot 3. Found 5 potential PIL images.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 0 in slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 1 in slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 2 in slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 3 in slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Successfully created PhotoImage for preview frame 4 in slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Checkbox for slot 3 set to state 'normal'.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Starting preview animation for slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Attempting to start/restart animation for slot 3.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Reset animation index for slot 3 to 0.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Starting animation update cycle for slot 3 with 5 valid frames.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Starting pre-marking process.
+2025-04-19 00:55:37,288 - INFO - MainThread - Pre-marking logic: 4 videos selected, 4 valid scores. MaxScore=0.785, SD=0.020, Threshold=0.775
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Video index 0 ('006_4.mp4') not pre-marked. Score 0.7348175482067733 (is None=False). Threshold check: False | False. Checkbox state was 'normal'.
+2025-04-19 00:55:37,288 - INFO - MainThread - Pre-marking video index 1 ('006_3.mp4') - Score 0.777 >= Threshold 0.775 or 0.85. Checkbox state was 'normal'.
+2025-04-19 00:55:37,288 - INFO - MainThread - Pre-marking video index 2 ('006_2.mp4') - Score 0.785 >= Threshold 0.775 or 0.85. Checkbox state was 'normal'.
+2025-04-19 00:55:37,288 - INFO - MainThread - Pre-marking video index 3 ('006_1.mp4') - Score 0.777 >= Threshold 0.775 or 0.85. Checkbox state was 'normal'.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Stored initial confirmation state after pre-marking: [False, True, True, True]
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Valid previews found. Calculating take assignment.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - calculate_and_display_take_assignment called.
+2025-04-19 00:55:37,288 - DEBUG - MainThread - Checking existing takes in target folder: /Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Checking files in '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003' for pattern '003_([1-4])\..+$'.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Found 0 items in target folder.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Highest existing take found: 0. Calculated starting take: 1.
+2025-04-19 00:55:37,289 - INFO - MainThread - Calculated potential takes: 1-4 for 4 selected files.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Finished take assignment calculation.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:37,289 - DEBUG - MainThread - check_button_state called after analysis results processed.
+2025-04-19 00:55:38,394 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:38,394 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:38,395 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:38,395 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:38,395 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:38,395 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:38,395 - DEBUG - MainThread - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-04-19 00:55:38,395 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:39,565 - INFO - MainThread - Process button clicked. Starting video placement.
+2025-04-19 00:55:39,565 - DEBUG - MainThread - Selected file indices: [0, 1, 2, 3]
+2025-04-19 00:55:39,565 - DEBUG - MainThread - Confirmed indices based on checkboxes: [0, 1, 2, 3]
+2025-04-19 00:55:39,565 - DEBUG - MainThread - Processing target folder: /Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003
+2025-04-19 00:55:39,566 - DEBUG - MainThread - Re-verifying existing files in /Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003 before processing.
+2025-04-19 00:55:39,566 - INFO - MainThread - Re-verified highest existing take as 0. Starting take for new files will be 1.
+2025-04-19 00:55:39,566 - INFO - MainThread - Logging verification data to CSV: verification_log.csv
+2025-04-19 00:55:39,566 - DEBUG - MainThread - Final confirmation states: [True, True, True, True]
+2025-04-19 00:55:39,566 - DEBUG - MainThread - Initial (pre-marked) confirmation states: [False, True, True, True]
+2025-04-19 00:55:39,566 - DEBUG - MainThread - Scores logged: 0.7348; 0.7774; 0.7849; 0.7767
+2025-04-19 00:55:39,566 - DEBUG - MainThread - Original filenames logged: 006_4.mp4; 006_3.mp4; 006_2.mp4; 006_1.mp4
+2025-04-19 00:55:39,566 - DEBUG - MainThread - Assigned take numbers logged: 1; 2; 3; 4
+2025-04-19 00:55:39,566 - DEBUG - MainThread - CSV log entry prepared: {'Timestamp': '2025-04-19 00:55:39', 'BaseDirectory': '/Users/administrator/Downloads/AI Dataset', 'Category': 'ABC - One-Handed', 'Session': 'A', 'InterpreterID': '003', 'NumFilesSelected': 4, 'OriginalFileNames': '006_4.mp4; 006_3.mp4; 006_2.mp4; 006_1.mp4', 'PerVideoScores': '0.7348; 0.7774; 0.7849; 0.7767', 'PreMarkedConfirmation': 'False; True; True; True', 'FinalConfirmation': 'True; True; True; True', 'ProcessedIndices': '0; 1; 2; 3', 'AssignedTakeNumbers': '1; 2; 3; 4'}
+2025-04-19 00:55:39,567 - INFO - MainThread - Successfully logged verification data to verification_log.csv
+2025-04-19 00:55:39,571 - INFO - MainThread - Starting file movement for 4 approved files.
+2025-04-19 00:55:39,571 - INFO - MainThread - Moving approved file (Index 0): '006_4.mp4' -> '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003/003_1.mp4' (Assigned Take 1)
+2025-04-19 00:55:39,571 - INFO - MainThread - Successfully moved and renamed '006_4.mp4' to '003_1.mp4'.
+2025-04-19 00:55:39,572 - INFO - MainThread - Moving approved file (Index 1): '006_3.mp4' -> '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003/003_2.mp4' (Assigned Take 2)
+2025-04-19 00:55:39,572 - INFO - MainThread - Successfully moved and renamed '006_3.mp4' to '003_2.mp4'.
+2025-04-19 00:55:39,572 - INFO - MainThread - Moving approved file (Index 2): '006_2.mp4' -> '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003/003_3.mp4' (Assigned Take 3)
+2025-04-19 00:55:39,572 - INFO - MainThread - Successfully moved and renamed '006_2.mp4' to '003_3.mp4'.
+2025-04-19 00:55:39,572 - INFO - MainThread - Moving approved file (Index 3): '006_1.mp4' -> '/Users/administrator/Downloads/AI Dataset/ABC - One-Handed/A/003/003_4.mp4' (Assigned Take 4)
+2025-04-19 00:55:39,572 - INFO - MainThread - Successfully moved and renamed '006_1.mp4' to '003_4.mp4'.
+2025-04-19 00:55:39,572 - INFO - MainThread - Finished file movement. Successfully processed 4 files with 0 errors.
+2025-04-19 00:55:40,661 - INFO - MainThread - Processing completed successfully.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Resetting UI state after processing.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - File selection state reset.
+2025-04-19 00:55:40,661 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Cancelled animation 'after' job for slot 0.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Cancelled animation 'after' job for slot 1.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Cancelled animation 'after' job for slot 2.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Cancelled animation 'after' job for slot 3.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:40,661 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Analysis results cleared after processing.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Col B selection cleared.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - populate_col_b called.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Populated Col B combobox with 26 sessions/items found in /Users/administrator/Downloads/AI Dataset/ABC - One-Handed.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Repopulated Col B list.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Col B state after repopulation: readonly, File Select disabled.
+2025-04-19 00:55:40,662 - INFO - MainThread - UI reset for next Session/Item selection.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - File select button state set to disabled.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:40,662 - DEBUG - MainThread - check_button_state called after processing and UI reset.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - on_col_a_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:43,022 - INFO - MainThread - Category selected: ABC - One-Handed
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Col B selection and file selection cleared.
+2025-04-19 00:55:43,022 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:43,022 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Calling populate_col_b.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - populate_col_b called.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Populated Col B combobox with 26 sessions/items found in /Users/administrator/Downloads/AI Dataset/ABC - One-Handed.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Status message updated to Step 4.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Status message updated.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - File select button disabled.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - File select button state set to disabled.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:43,023 - DEBUG - MainThread - check_button_state called after Col A selection.
+2025-04-19 00:55:44,596 - DEBUG - MainThread - on_col_b_select called. Event: <VirtualEvent event x=0 y=0>
+2025-04-19 00:55:44,596 - INFO - MainThread - Session/Item selected: A
+2025-04-19 00:55:44,597 - DEBUG - MainThread - File selection cleared.
+2025-04-19 00:55:44,597 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Analysis results cleared.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - File select button enabled. Status updated to Step 5.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:55:44,597 - DEBUG - MainThread - check_button_state called after Col B selection.
+2025-04-19 00:55:45,538 - DEBUG - MainThread - select_video_files called.
+2025-04-19 00:55:45,539 - DEBUG - MainThread - Opening file dialog to select up to 4 video files.
+2025-04-19 00:55:52,548 - INFO - MainThread - Clearing previous analysis results and stopping animations.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Similarity scores reset.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Score display labels reset.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Take assignment display reset.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Initial confirmation state tracking reset.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Approval checkboxes reset and disabled.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Preview photo image list reset.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Cleared preview image for slot 0.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Cleared preview image for slot 1.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Cleared preview image for slot 2.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Cleared preview image for slot 3.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Preview animation indices reset.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Finished clearing analysis results.
+2025-04-19 00:55:52,548 - INFO - MainThread - Video file selection cancelled by user.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - check_button_state called.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Post-initial setup phase.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Base dir and ID widgets disabled.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Col A combobox state set to readonly.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Col B combobox state set to readonly.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - File select button state set to normal.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-04-19 00:55:52,548 - DEBUG - MainThread - Finished check_button_state.
+2025-04-19 00:56:01,959 - INFO - MainThread - Application closing requested. Stopping animations and destroying window.
+2025-04-19 00:56:01,959 - DEBUG - MainThread - All known animation 'after' jobs cancelled.
+2025-04-19 00:56:01,966 - INFO - MainThread - Window destroyed. Application exiting.
+2025-04-19 00:56:01,967 - INFO - MainThread - Tkinter main loop finished.
