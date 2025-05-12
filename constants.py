@@ -30,4 +30,5 @@ PRE_MARKING_SCORE_THRESHOLD = 0.85
 
 # --- File System Constants ---
 VALID_VIDEO_EXTENSIONS = ('.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv')
-INTERPRETER_ID_RANGE = range(1, 11) # Example, can be configured
+INTERPRETER_ID_RANGE = range(1, 11) 
+MAX_TAKES_PER_WORD_INTERPRETER = 4
