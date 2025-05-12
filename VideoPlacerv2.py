@@ -28,19 +28,28 @@ logger.info("Logging configured. Application start.")
 
 # --- Try importing required libraries and provide guidance if missing ---
 try:
-    logger.debug("Attempting to import dependencies: cv2, PIL, skimage, numpy")
+    logger.debug("Attempting to import dependencies: cv2, PIL, skimage, numpy, tkinterdnd2")
     import cv2
     from PIL import Image, ImageTk
     from skimage.metrics import structural_similarity as ssim
     import numpy as np
-    logger.debug("Dependencies imported successfully.")
+    logger.debug("Core dependencies (cv2, PIL, skimage, numpy) imported successfully.")
+    try:
+        from tkinterdnd2 import TkinterDnD, DND_FILES
+        tkinter_dnd_available = True
+        logger.debug("TkinterDnD2 imported successfully for drag-and-drop.")
+    except ImportError:
+        tkinter_dnd_available = False
+        logger.warning("TkinterDnD2 library not found. Drag and drop functionality will be unavailable. Install with 'pip install tkinterdnd2'.")
+
 except ImportError as e:
     logger.critical(f"Missing required library: {e.name}. Please install dependencies.", exc_info=True)
     messagebox.showerror(
         "Missing Dependencies",
         f"Error: Required library not found: {e.name}\n\n"
         "Please install required libraries using pip:\n"
-        "pip install opencv-python Pillow scikit-image numpy"
+        "pip install opencv-python Pillow scikit-image numpy\n"
+        "(Optional for drag-and-drop: pip install tkinterdnd2)"
     )
     # Exit if dependencies are missing, otherwise the app will crash later
     sys.exit(1)
@@ -105,8 +114,8 @@ class VideoPlacerApp:
         # --- Tkinter Variables ---
         self.base_directory = tk.StringVar()
         self.selected_interpreter_id = tk.StringVar()
-        self.selected_col_a = tk.StringVar()
-        self.selected_col_b = tk.StringVar()
+        self.selected_category = tk.StringVar() # Replaces selected_col_a
+        self.selected_word = tk.StringVar()     # Replaces selected_col_b
         self.selected_file_paths_tuple = ()
         self.selected_files_info = tk.StringVar(value="No files selected")
         self.status_message = tk.StringVar(value="Step 1: Select Base Directory")
@@ -145,10 +154,10 @@ class VideoPlacerApp:
         main_frame.pack(expand=True, fill=tk.BOTH)
         logger.debug("Main frame created and packed.")
 
-        row_basedir = 0; row_id = 1; row_cola = 2; row_colb = 3
-        row_fileselect = 4; row_verification_area = 5; row_analysis_info = 6
-        row_processbtn = 7; row_status = 8
-        logger.debug(f"Defined grid row assignments: basedir={row_basedir}, id={row_id}, colA={row_cola}, colB={row_colb}, fileselect={row_fileselect}, verification={row_verification_area}, analysis_info={row_analysis_info}, process_btn={row_processbtn}, status={row_status}")
+        row_basedir = 0; row_id = 1; row_treeview = 2 # Category/Word Tree
+        row_fileselect = 3; row_verification_area = 4; row_analysis_info = 5
+        row_processbtn = 6; row_status = 7
+        logger.debug(f"Defined grid row assignments: basedir={row_basedir}, id={row_id}, treeview={row_treeview}, fileselect={row_fileselect}, verification={row_verification_area}, analysis_info={row_analysis_info}, process_btn={row_processbtn}, status={row_status}")
 
         # --- Widgets ---
         ttk.Label(main_frame, text="Base Directory:").grid(row=row_basedir, column=0, sticky=tk.W, padx=10, pady=(10, 5))
@@ -160,26 +169,26 @@ class VideoPlacerApp:
 
         ttk.Label(main_frame, text="Interpreter ID:").grid(row=row_id, column=0, sticky=tk.W, padx=10, pady=5)
         interpreter_ids = [f"{i:03d}" for i in range(1, 11)] # Example IDs
-        self.interpreter_id_combobox = ttk.Combobox(main_frame, textvariable=self.selected_interpreter_id, values=interpreter_ids, width=43, state='disabled')
-        self.interpreter_id_combobox.grid(row=row_id, column=1, columnspan=2, padx=5, pady=5)
+        self.interpreter_id_combobox = ttk.Combobox(main_frame, textvariable=self.selected_interpreter_id, values=interpreter_ids, width=40, state='disabled') # Adjusted width
+        self.interpreter_id_combobox.grid(row=row_id, column=1, sticky=tk.EW, padx=5, pady=5)
         self.interpreter_id_combobox.bind("<<ComboboxSelected>>", self.on_id_select)
         logger.debug("Interpreter ID widgets placed.")
 
-        ttk.Label(main_frame, text="Category:").grid(row=row_cola, column=0, sticky=tk.W, padx=10, pady=5)
-        self.col_a_combobox = ttk.Combobox(main_frame, textvariable=self.selected_col_a, width=43, state='disabled')
-        self.col_a_combobox.grid(row=row_cola, column=1, columnspan=2, padx=5, pady=5)
-        self.col_a_combobox.bind("<<ComboboxSelected>>", self.on_col_a_select)
-        logger.debug("Category widgets placed.")
-
-        ttk.Label(main_frame, text="Word:").grid(row=row_colb, column=0, sticky=tk.W, padx=10, pady=5)
-        self.col_b_combobox = ttk.Combobox(main_frame, textvariable=self.selected_col_b, width=43, state='disabled')
-        self.col_b_combobox.grid(row=row_colb, column=1, columnspan=2, padx=5, pady=5)
-        self.col_b_combobox.bind("<<ComboboxSelected>>", self.on_col_b_select)
-        logger.debug("Word widgets placed.")
+        # --- Category/Word TreeView ---
+        ttk.Label(main_frame, text="Category / Word:").grid(row=row_treeview, column=0, sticky=tk.NW, padx=10, pady=(10,5))
+        self.category_word_tree = ttk.Treeview(main_frame, selectmode="browse", height=7, show="tree headings") # height is number of rows
+        self.category_word_tree.heading("#0", text="Select a Word")
+        self.category_word_tree.column("#0", width=250) # Adjust width as needed
+        self.tree_scroll = ttk.Scrollbar(main_frame, orient="vertical", command=self.category_word_tree.yview)
+        self.category_word_tree.configure(yscrollcommand=self.tree_scroll.set)
+        self.category_word_tree.grid(row=row_treeview, column=1, sticky="nsew", padx=(5,0), pady=5)
+        self.tree_scroll.grid(row=row_treeview, column=2, sticky="nsw", padx=(0,10), pady=5) # Adjusted padx
+        self.category_word_tree.bind("<<TreeviewSelect>>", self.on_tree_item_select)
+        logger.debug("Category/Word TreeView placed.")
 
         ttk.Label(main_frame, text="Selected Files:").grid(row=row_fileselect, column=0, sticky=tk.W, padx=10, pady=5)
-        self.files_info_entry = ttk.Entry(main_frame, textvariable=self.selected_files_info, width=45, state='readonly')
-        self.files_info_entry.grid(row=row_fileselect, column=1, columnspan=2, padx=5, pady=5)
+        self.files_info_entry = ttk.Entry(main_frame, textvariable=self.selected_files_info, width=40, state='readonly') # Adjusted width
+        self.files_info_entry.grid(row=row_fileselect, column=1, sticky=tk.EW, padx=5, pady=5)
         self.select_files_button = ttk.Button(main_frame, text="Select Files...", command=self.select_video_files, state='disabled')
         self.select_files_button.grid(row=row_fileselect, column=3, padx=10, pady=5)
         logger.debug("File selection widgets placed.")
@@ -188,7 +197,7 @@ class VideoPlacerApp:
         # --- Verification Area (Animated Preview, Scores, Checkboxes) ---
         ttk.Label(main_frame, text="Review & Approve Takes:").grid(row=row_verification_area, column=0, sticky="nw", padx=10, pady=(15, 0))
         self.verification_frame = ttk.Frame(main_frame, borderwidth=1, relief="sunken")
-        self.verification_frame.grid(row=row_verification_area, column=1, columnspan=3, sticky="nsew", padx=10, pady=(10,5))
+        self.verification_frame.grid(row=row_verification_area, column=1, columnspan=3, sticky="nsew", padx=5, pady=(10,5)) # Adjusted padx
         logger.debug("Verification area frame placed.")
 
         # Use single label per slot for animation
@@ -218,21 +227,22 @@ class VideoPlacerApp:
         logger.debug(f"Created {MAX_VIDEOS} slots in verification frame (preview labels, score labels, checkboxes).")
 
         # Take Assignment Display
-        ttk.Label(main_frame, textvariable=self.take_assignment_display, style="TakeAssign.TLabel").grid(row=row_analysis_info, column=1, columnspan=3, sticky="w", padx=10, pady=(5, 0))
+        ttk.Label(main_frame, textvariable=self.take_assignment_display, style="TakeAssign.TLabel").grid(row=row_analysis_info, column=1, columnspan=2, sticky="w", padx=5, pady=(5, 0)) # Adjusted columnspan and padx
         logger.debug("Take assignment display label placed.")
 
         # Process Button
         self.process_button = ttk.Button(main_frame, text="Place Approved Files", command=self.process_selected_videos, state='disabled')
-        self.process_button.grid(row=row_processbtn, column=1, columnspan=2, pady=20)
+        self.process_button.grid(row=row_processbtn, column=1, sticky=tk.EW, pady=20, padx=5) # Adjusted columnspan and sticky
         logger.debug("Process button placed.")
 
         # Status Label
-        ttk.Label(main_frame, textvariable=self.status_message, style="Status.TLabel").grid(row=row_status, column=0, columnspan=4, sticky="ew", padx=10, pady=(10, 15))
+        ttk.Label(main_frame, textvariable=self.status_message, style="Status.TLabel").grid(row=row_status, column=0, columnspan=4, sticky="ew", padx=5, pady=(10, 15)) # Adjusted padx
         logger.debug("Status label placed.")
 
         # --- Configure Grid (within main_frame) ---
         main_frame.columnconfigure(1, weight=1)
-        main_frame.columnconfigure(2, weight=1)
+        main_frame.columnconfigure(2, weight=0) # Column for scrollbar / some buttons
+        main_frame.columnconfigure(3, weight=0) # Column for some buttons
         main_frame.rowconfigure(row_verification_area, weight=1)
         logger.debug("Main frame grid configured for expansion.")
 
@@ -243,6 +253,23 @@ class VideoPlacerApp:
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
         logger.debug("Bound on_closing method to window close event.")
 
+        # --- Drag and Drop Setup ---
+        self.dnd_initialized_successfully = False
+        if tkinter_dnd_available: # Check if TkinterDnD was imported successfully at the script level
+            try:
+                if isinstance(self.master, TkinterDnD.Tk): # Check if master is DND enabled
+                    self.verification_frame.drop_target_register(DND_FILES)
+                    self.verification_frame.dnd_bind('<<Drop>>', self.handle_drop_event)
+                    logger.info("Drag and drop enabled for the verification frame.")
+                    self.dnd_initialized_successfully = True
+                else:
+                    logger.warning("Drag and drop setup skipped: master window is not a TkinterDnD.Tk instance (should be if tkinter_dnd_available is True).")
+            except NameError: # Handles if DND_FILES or TkinterDnD is not defined due to failed import within this scope
+                logger.warning("TkinterDnD2 components not available for DND setup in __init__.")
+            except Exception as e:
+                logger.error(f"Error setting up drag and drop in __init__: {e}", exc_info=True)
+        else:
+            logger.info("Drag and drop disabled as TkinterDnD2 library is not available.")
         logger.info("VideoPlacerApp GUI initialization complete.")
 
 
@@ -304,10 +331,9 @@ class VideoPlacerApp:
             logger.info(f"Base directory selected: {directory}")
             # Enable next step and disable this one
             self.interpreter_id_combobox.config(state='readonly')
+            self.interpreter_id_combobox.focus()
             self.base_dir_button.config(state='disabled')
-            # Ensure subsequent steps are disabled
-            self.col_a_combobox.config(state='disabled')
-            self.col_b_combobox.config(state='disabled')
+            self.category_word_tree.config(state='disabled')
             self.select_files_button.config(state='disabled')
             self.process_button.config(state='disabled') # Process button should also be disabled
             logger.debug("Enabled Interpreter ID combobox, disabled Base Dir button.")
@@ -329,93 +355,27 @@ class VideoPlacerApp:
         logger.info(f"Interpreter ID selected: {selected_id}. Initial setup now complete.")
         self.initial_setup_done = True
         self.interpreter_id_combobox.config(state='disabled')
-        self.status_message.set("Step 3: Select Category")
-
-        logger.debug("Calling populate_col_a.")
-        self.populate_col_a()
-
-        # Update state of Category combobox
-        col_a_options_exist = bool(self.col_a_combobox['values'])
-        self.col_a_combobox.config(state='readonly' if col_a_options_exist else 'disabled')
-        logger.debug(f"Category combobox state set to {'readonly' if col_a_options_exist else 'disabled'}.")
+        self.status_message.set("Step 3: Select a Word from the tree below.")
+        logger.debug("Calling populate_category_word_tree.")
+        self.populate_category_word_tree()
+        # populate_category_word_tree itself will set state to 'normal' if successful
+        # or 'disabled' if not.
+        self.category_word_tree.focus_set() # Set focus to the tree
 
         # Clear subsequent selections and states
-        self.selected_col_a.set("")
-        self.selected_col_b.set("")
-        self.col_b_combobox.set("")
-        self.col_b_combobox['values'] = [] # Clear old values
-        self.col_b_combobox.config(state='disabled')
-        logger.debug("Category and Word selections cleared, Word disabled.")
+        self.selected_category.set("")
+        self.selected_word.set("")
+        self.category_word_tree.selection_set(()) # Clear tree selection
+        logger.debug("Category and Word selections (StringVar) cleared. Tree selection cleared.")
 
-        self.selected_file_paths_tuple = ()
-        self.selected_files_info.set("No files selected")
-        logger.debug("File selection cleared.")
-
-        self.clear_analysis_results() # Also stops animations and disables checkboxes
-        logger.debug("Analysis results cleared.")
-
-        self.check_button_state() # Re-evaluate process button state
-        logger.debug("check_button_state called after ID selection.")
-
-    def populate_col_a(self):
-        logger.debug("populate_col_a called.")
-        base_dir = self.base_directory.get()
-        if not base_dir or not os.path.isdir(base_dir):
-            self.col_a_combobox['values'] = []
-            logger.debug("Base directory not set or not a directory. Category values cleared.")
-            return
-
-        try:
-            # List directories directly under the base directory
-            opts = sorted([d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))])
-            self.col_a_combobox['values'] = opts
-            logger.debug(f"Populated Category combobox with {len(opts)} Category found in {base_dir}.")
-            if not opts:
-                self.status_message.set("No category folders found.")
-                logger.warning(f"No category folders found in {base_dir}")
-        except Exception as e:
-            logger.error(f"Failed to read base directory '{base_dir}' for Category population: {e}", exc_info=True)
-            messagebox.showerror("Error", f"Failed to read base directory for Category:\n{e}")
-            self.col_a_combobox['values'] = []
-            self.status_message.set("Error reading base directory.")
-            logger.error("Category combobox values cleared due to error.")
-
-    def on_col_a_select(self, event=None):
-        logger.debug(f"on_col_a_select called. Event: {event}")
-        if not self.initial_setup_done:
-            logger.debug("on_col_a_select: Initial setup not done, returning.")
-            return
-
-        selected_col_a = self.selected_col_a.get()
-        logger.info(f"Category selected: {selected_col_a}")
-
-        # Clear subsequent selections and states
-        self.selected_col_b.set("")
-        self.col_b_combobox.set("") # Clear combobox display
         self.selected_file_paths_tuple = ()
         self.selected_files_info.set("No files selected")
         logger.debug("Word selection and file selection cleared.")
 
-        self.clear_analysis_results() # Also stops animations and disables checkboxes
+        self.clear_analysis_results()
         logger.debug("Analysis results cleared.")
 
-        logger.debug("Calling populate_col_b.")
-        self.populate_col_b()
-
-        # Update state of Word combobox
-        col_b_options_exist = bool(self.col_b_combobox['values'])
-        self.col_b_combobox.config(state='readonly' if col_b_options_exist else 'disabled')
-        logger.debug(f"Word combobox state set to {'readonly' if col_b_options_exist else 'disabled'}.")
-
-        # Update status message based on whether Word options exist
-        if col_b_options_exist:
-            self.status_message.set("Step 4: Select Word")
-            logger.debug("Status message updated to Step 4.")
-        else:
-            self.status_message.set("No Word folders found for this Category.")
-            logger.warning(f"No Word folders found for category: {selected_col_a}")
-        logger.debug("Status message updated.")
-
+        # Status message is handled by populate_category_word_tree or on_tree_item_select
 
         # Select Files button should be disabled until Word is selected
         self.select_files_button.config(state='disabled')
@@ -423,71 +383,158 @@ class VideoPlacerApp:
 
         self.check_button_state() # Re-evaluate process button state
         logger.debug("check_button_state called after Category selection.")
+        logger.debug("on_id_select finished processing.")
 
+    def populate_category_word_tree(self):
+        """Populates the TreeView with categories and words from the base directory."""
+        logger.debug("populate_category_word_tree called.")
+        for i in self.category_word_tree.get_children():
+            self.category_word_tree.delete(i)
+        logger.debug("Cleared existing items from category_word_tree.")
 
-    def populate_col_b(self):
-        logger.debug("populate_col_b called.")
         base_dir = self.base_directory.get()
-        col_a = self.selected_col_a.get()
-
-        if not base_dir or not col_a:
-            self.col_b_combobox['values'] = []
-            logger.debug("Base directory or Category not set. Word values cleared.")
+        if not base_dir or not os.path.isdir(base_dir):
+            logger.warning(f"Base directory '{base_dir}' not set or not a directory. Tree not populated.")
+            self.category_word_tree.insert("", "end", text="Base directory not set or invalid.", open=False)
+            self.category_word_tree.config(state='disabled')
+            self.status_message.set("Error: Base directory invalid. Cannot load categories.")
             return
-
-        col_a_path = os.path.join(base_dir, col_a)
-        if not os.path.isdir(col_a_path):
-            self.col_b_combobox['values'] = []
-            logger.warning(f"Category folder '{col_a_path}' not found or not a directory. Word values cleared.")
-            return # Should not happen if populate_col_a worked correctly, but good practice
 
         try:
-            # List directories directly under the category directory
-            opts = sorted([d for d in os.listdir(col_a_path) if os.path.isdir(os.path.join(col_a_path, d))])
-            self.col_b_combobox['values'] = opts
-            logger.debug(f"Populated Word combobox with {len(opts)} sessions/items found in {col_a_path}.")
+            categories = sorted([d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))])
+            if not categories:
+                logger.info(f"No category subdirectories found in {base_dir}.")
+                self.category_word_tree.insert("", "end", text="No categories found in base directory.", open=False)
+                self.category_word_tree.config(state='disabled') # Keep disabled if no categories
+                self.status_message.set("No categories found. Add category folders to the base directory.")
+                return
+
+            for category_name in categories:
+                category_id = self.category_word_tree.insert("", "end", text=category_name, open=False, tags=('category',))
+                category_path = os.path.join(base_dir, category_name)
+                words = sorted([w for w in os.listdir(category_path) if os.path.isdir(os.path.join(category_path, w))])
+                if words:
+                    for word_name in words:
+                        self.category_word_tree.insert(category_id, "end", text=word_name, tags=('word',))
+                else:
+                    # Optional: Indicate if a category has no words
+                    self.category_word_tree.insert(category_id, "end", text=" (No words)", tags=('empty_category_info',))
+            
+            self.category_word_tree.config(state='normal')
+            self.status_message.set("Select a Category, then a Word from the tree.")
+            logger.info(f"Populated category/word tree with {len(categories)} categories from {base_dir}.")
+
         except Exception as e:
-            logger.error(f"Failed to read category folder '{col_a_path}' for Word population: {e}", exc_info=True)
-            messagebox.showerror("Error", f"Failed to read category folder '{col_a}':\n{e}")
-            self.col_b_combobox['values'] = []
-            logger.error("Word combobox values cleared due to error.")
+            logger.error(f"Error populating category/word tree: {e}", exc_info=True)
+            messagebox.showerror("Tree Population Error", f"Failed to populate categories and words: {e}")
+            self.category_word_tree.config(state='disabled')
+            self.status_message.set("Error populating category/word tree.")
 
-    def on_col_b_select(self, event=None):
-        logger.debug(f"on_col_b_select called. Event: {event}")
-        if not self.initial_setup_done:
-            logger.debug("on_col_b_select: Initial setup not done, returning.")
-            return
+    def on_tree_item_select(self, event=None):
+        """Handles selection changes in the category/word TreeView."""
+        logger.debug("on_tree_item_select called.")
+        selected_item_id = self.category_word_tree.focus() # Get the ID of the focused/selected item
 
-        selected_col_b = self.selected_col_b.get()
-        logger.info(f"Word selected: {selected_col_b}")
+        if not selected_item_id: # No item selected (e.g., selection cleared)
+            self.selected_category.set("")
+            self.selected_word.set("")
+            logger.debug("Tree selection cleared. Category and Word reset.")
+        else:
+            item = self.category_word_tree.item(selected_item_id)
+            item_text = item['text']
+            item_tags = item['tags']
 
-        # Clear previous file selection and analysis results
+            if 'word' in item_tags:
+                parent_id = self.category_word_tree.parent(selected_item_id)
+                self.selected_category.set(self.category_word_tree.item(parent_id, "text"))
+                self.selected_word.set(item_text)
+                logger.info(f"Word selected: '{item_text}' under Category: '{self.selected_category.get()}'")
+            elif 'category' in item_tags:
+                self.selected_category.set(item_text)
+                self.selected_word.set("") # Clear word if only category is selected
+                logger.info(f"Category selected: '{item_text}'. Word cleared.")
+            else: # Should not happen if tags are set correctly
+                self.selected_category.set("")
+                self.selected_word.set("")
+                logger.warning(f"Selected tree item '{item_text}' has no 'category' or 'word' tag.")
+
+        # Common actions for any selection change
         self.selected_file_paths_tuple = ()
         self.selected_files_info.set("No files selected")
-        logger.debug("File selection cleared.")
+        self.clear_analysis_results() # Clears scores, previews, and disables checkboxes
 
-        self.clear_analysis_results() # Also stops animations and disables checkboxes
-        logger.debug("Analysis results cleared.")
-
-        # Enable File Select button only if Word is selected
-        if selected_col_b:
-            self.select_files_button.config(state='normal')
-            self.status_message.set("Step 5: Select video file(s)")
-            logger.debug("File select button enabled. Status updated to Step 5.")
+        if self.selected_word.get():
+            self.status_message.set(f"Step 4: Select video files for Word '{self.selected_word.get()}'")
+            self.calculate_and_display_take_assignment() # Update take info if a word is selected
+        elif self.selected_category.get():
+            self.status_message.set(f"Select a Word under Category '{self.selected_category.get()}'")
+            self.take_assignment_display.set("Takes: -") # Clear take info if only category
         else:
-            self.select_files_button.config(state='disabled')
-            self.status_message.set("Select Word")
-            logger.debug("File select button disabled. Status updated to Select Word.")
+            self.status_message.set("Select a Category, then a Word.")
+            self.take_assignment_display.set("Takes: -")
 
-        self.check_button_state() # Re-evaluate process button state
-        logger.debug("check_button_state called after Word selection.")
+        self.check_button_state()
+        logger.debug("on_tree_item_select finished processing.")
 
+    # --- Centralized File Processing Logic ---
+    def _process_filepaths_for_analysis(self, filepaths):
+        """Common logic to handle a list of filepaths for analysis."""
+        if not filepaths:
+            logger.debug("_process_filepaths_for_analysis called with no filepaths.")
+            return
+
+        num_selected = len(filepaths)
+        logger.info(f"Processing {num_selected} file(s) for analysis via _process_filepaths_for_analysis.")
+
+        if num_selected > MAX_VIDEOS:
+            messagebox.showwarning("Too Many Files", f"Please select/drop a maximum of {MAX_VIDEOS} files. {num_selected} were provided.")
+            logger.warning(f"User provided {num_selected} files, exceeding the maximum of {MAX_VIDEOS}.")
+            return
+
+        # Validate file extensions (basic check)
+        valid_extensions = ('.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv')
+        validated_filepaths = []
+        for fp in filepaths:
+            if os.path.splitext(fp)[1].lower() in valid_extensions:
+                validated_filepaths.append(fp)
+            else:
+                logger.warning(f"Skipping non-video file (based on extension): {fp}")
+        
+        if not validated_filepaths:
+            messagebox.showwarning("No Valid Video Files", "No files with recognized video extensions were found among the provided files.")
+            logger.warning("No valid video files after extension check from provided list.")
+            # Clear selections if all provided files were invalid
+            self.selected_file_paths_tuple = ()
+            self.selected_files_info.set("No files selected")
+            self.clear_analysis_results() # Clean up UI
+            self.status_message.set("No valid video files found.")
+            self.check_button_state()
+            return
+
+        filepaths_to_process = tuple(validated_filepaths)
+        num_to_process = len(filepaths_to_process)
+
+        self.clear_analysis_results() # Clears previous results and animations
+        logger.debug("Cleared previous analysis results and animations before new analysis.")
+
+        self.selected_file_paths_tuple = filepaths_to_process
+        self.selected_files_info.set(f"{num_to_process} file(s) selected")
+        self.status_message.set("Analyzing videos...")
+        logger.info(f"Selected {num_to_process} video files for analysis: {'; '.join(map(os.path.basename, filepaths_to_process))}")
+
+        self.check_button_state() # Update button states (e.g., disable process button)
+        self.is_analysis_running = True
+        logger.info("Analysis started. Setting is_analysis_running to True.")
+
+        analysis_thread = threading.Thread(target=self.analyze_videos_thread, args=(filepaths_to_process,), daemon=True)
+        analysis_thread.start()
+        logger.debug(f"Analysis thread started: {analysis_thread.name}")
 
     # --- Video File Selection and Analysis Trigger ---
     def select_video_files(self):
         """Opens dialog to select multiple video files and starts analysis thread."""
         logger.debug("select_video_files called.")
-        if not self.selected_col_b.get():
+        if not self.selected_word.get(): # Corrected from selected_col_b
             messagebox.showwarning("Selection Missing", "Please select Word first.")
             logger.warning("Attempted to select files before selecting Word.")
             return
@@ -499,44 +546,50 @@ class VideoPlacerApp:
 
         video_types = [("Video Files", "*.mp4 *.avi *.mov *.wmv *.mkv *.flv"), ("All Files", "*.*")]
         logger.debug(f"Opening file dialog to select up to {MAX_VIDEOS} video files.")
-        filepaths = filedialog.askopenfilenames(title=f"Select up to {MAX_VIDEOS} Video Files", filetypes=video_types)
+        filepaths_from_dialog = filedialog.askopenfilenames(title=f"Select up to {MAX_VIDEOS} Video Files", filetypes=video_types)
 
-        if filepaths:
-            num_selected = len(filepaths)
-            logger.info(f"User selected {num_selected} file(s).")
-            if num_selected > MAX_VIDEOS:
-                messagebox.showwarning("Too Many Files", f"Please select a maximum of {MAX_VIDEOS} files.")
-                logger.warning(f"User selected {num_selected} files, exceeding the maximum of {MAX_VIDEOS}. Aborting selection.")
-                return # Do not proceed if too many files
-
-            # --- Stop previous animations before starting new analysis ---
-            self.clear_analysis_results() # This now also cancels animations and disables checkboxes
-            logger.debug("Cleared previous analysis results and animations before new selection.")
-
-            self.selected_file_paths_tuple = filepaths
-            self.selected_files_info.set(f"{num_selected} file(s) selected")
-            self.status_message.set("Analyzing videos...")
-            logger.info(f"Selected {num_selected} video files for analysis: {'; '.join(map(os.path.basename, filepaths))}")
-            logger.debug(f"File paths tuple updated: {filepaths}")
-
-            self.check_button_state() # Disable process button
-            self.is_analysis_running = True
-            logger.info("Analysis started. Setting is_analysis_running to True.")
-
-            # Start analysis in a background thread
-            logger.info("Starting video analysis thread.")
-            analysis_thread = threading.Thread(target=self.analyze_videos_thread, args=(filepaths,), daemon=True)
-            analysis_thread.start()
-            logger.debug(f"Analysis thread started: {analysis_thread.name}")
-
+        if filepaths_from_dialog:
+            self._process_filepaths_for_analysis(filepaths_from_dialog)
         else:
             self.selected_file_paths_tuple = ()
             self.selected_files_info.set("No files selected")
-            self.clear_analysis_results() # Ensure display is clean even on cancel
+            self.clear_analysis_results() # Ensure display is clean on cancel
             self.status_message.set("Video file selection cancelled.")
             logger.info("Video file selection cancelled by user.")
             self.check_button_state() # Update button states after cancellation
 
+    def handle_drop_event(self, event):
+        """Handles files dropped onto the designated drop target."""
+        logger.debug(f"handle_drop_event called. Event data raw: '{event.data}'")
+
+        if not self.selected_word.get(): # Corrected from selected_col_b
+            messagebox.showwarning("Selection Missing", "Please select Category and Word first before dropping files.")
+            logger.warning("Attempted to drop files before selecting Word.")
+            return
+
+        if self.is_analysis_running:
+            messagebox.showwarning("Busy", "Analysis is already in progress. Please wait before dropping more files.")
+            logger.warning("Attempted to drop files while analysis is already running.")
+            return
+
+        try:
+            # Parse the file paths from the event data. TkinterDnD2 uses Tcl-list format.
+            filepaths = self.master.tk.splitlist(event.data)
+            if not filepaths:
+                logger.warning("Drop event occurred but no filepaths were parsed from event.data.")
+                return
+            
+            logger.info(f"Files dropped and parsed: {filepaths}")
+            self._process_filepaths_for_analysis(filepaths)
+
+        except Exception as e:
+            logger.error(f"Error handling dropped files: {e}", exc_info=True)
+            messagebox.showerror("Drop Error", f"An error occurred while processing dropped files:\n{e}")
+            self.selected_file_paths_tuple = () # Reset state
+            self.selected_files_info.set("No files selected")
+            self.clear_analysis_results()
+            self.status_message.set("Error processing dropped files.")
+            self.check_button_state()
 
     # --- Helper Functions for Video Analysis ---
     def _extract_frames(self, video_path):
@@ -1094,9 +1147,9 @@ class VideoPlacerApp:
     def calculate_and_display_take_assignment(self):
         """Calculates the available take range based on existing files and number selected."""
         logger.debug("calculate_and_display_take_assignment called.")
-        base_dir = self.base_directory.get()
-        col_a = self.selected_col_a.get()
-        col_b = self.selected_col_b.get()
+        base_dir = self.base_directory.get() # Correct
+        category = self.selected_category.get() # Updated
+        word = self.selected_word.get()         # Updated
         interpreter_id = self.selected_interpreter_id.get()
         num_selected = len(self.selected_file_paths_tuple)
 
@@ -1105,13 +1158,13 @@ class VideoPlacerApp:
             logger.debug("No files selected, take assignment set to '-'.")
             return
 
-        if not all([base_dir, col_a, col_b, interpreter_id]):
+        if not all([base_dir, category, word, interpreter_id]): # Updated
             self.take_assignment_display.set("Takes: Error")
             self.status_message.set("Error: Prerequisite selection missing for take calculation.")
-            logger.error(f"Missing prerequisites for take calculation: BaseDir='{base_dir}', ColA='{col_a}', ColB='{col_b}', InterpreterID='{interpreter_id}'.")
+            logger.error(f"Missing prerequisites for take calculation: BaseDir='{base_dir}', Category='{category}', Word='{word}', InterpreterID='{interpreter_id}'.")
             return
 
-        target_folder_path = os.path.join(base_dir, col_a, col_b, interpreter_id)
+        target_folder_path = os.path.join(base_dir, category, word, interpreter_id) # Updated
         logger.debug(f"Checking existing takes in target folder: {target_folder_path}")
 
         highest_take = 0
@@ -1188,10 +1241,8 @@ class VideoPlacerApp:
             # Base directory button enabled only if no base dir is set yet
             self.base_dir_button.config(state='normal' if not self.base_directory.get() else 'disabled')
             # Interpreter ID enabled only after base dir is set
-            self.interpreter_id_combobox.config(state='readonly' if self.base_directory.get() else 'disabled')
-            # All subsequent steps disabled
-            self.col_a_combobox.config(state='disabled')
-            self.col_b_combobox.config(state='disabled')
+            self.interpreter_id_combobox.config(state='readonly' if self.base_directory.get() and not self.initial_setup_done else 'disabled')
+            self.category_word_tree.config(state='disabled')
             self.select_files_button.config(state='disabled')
             self.process_button.config(state='disabled')
             # Checkboxes disabled in clear_analysis_results, which is called during initial setup
@@ -1206,21 +1257,15 @@ class VideoPlacerApp:
         self.interpreter_id_combobox.config(state='disabled')
         logger.debug("Base dir and ID widgets disabled.")
 
-        # Category enabled if options exist
-        col_a_options_exist = bool(self.col_a_combobox['values'])
-        self.col_a_combobox.config(state='readonly' if col_a_options_exist else 'disabled')
-        logger.debug(f"Category combobox state set to {'readonly' if col_a_options_exist else 'disabled'}.")
-
-        # Word enabled if Category is selected AND options exist
-        col_a_selected = bool(self.selected_col_a.get())
-        col_b_options_exist = bool(self.col_b_combobox['values'])
-        self.col_b_combobox.config(state='readonly' if col_a_selected and col_b_options_exist else 'disabled')
-        logger.debug(f"Word combobox state set to {'readonly' if col_a_selected and col_b_options_exist else 'disabled'}.")
+        # Category/Word TreeView enabled if initial setup is done and base_directory is set
+        # (its population logic handles if base_dir is invalid)
+        self.category_word_tree.config(state='normal' if self.initial_setup_done and self.base_directory.get() else 'disabled')
+        logger.debug(f"Category/Word TreeView state: {'normal' if self.category_word_tree.cget('state') == 'normal' else 'disabled'}")
 
         # File Select enabled if Word is selected
-        col_b_selected = bool(self.selected_col_b.get())
-        self.select_files_button.config(state='normal' if col_b_selected else 'disabled')
-        logger.debug(f"File select button state set to {'normal' if col_b_selected else 'disabled'}.")
+        word_selected = bool(self.selected_word.get())
+        self.select_files_button.config(state='normal' if word_selected else 'disabled')
+        logger.debug(f"File select button state set to {'normal' if word_selected else 'disabled'}.")
 
         # Process button requires specific conditions:
         # 1. Files must be selected.
@@ -1277,8 +1322,8 @@ class VideoPlacerApp:
         log_entry = {
             "Timestamp": timestamp,
             "BaseDirectory": self.base_directory.get(),
-            "Category": self.selected_col_a.get(),
-            "Session": self.selected_col_b.get(),
+            "Category": self.selected_category.get(), # Updated
+            "Word": self.selected_word.get(),         # Updated (and renamed key for clarity)
             "InterpreterID": self.selected_interpreter_id.get(),
             "NumFilesSelected": num_selected,
             "OriginalFileNames": original_filenames_str,
@@ -1342,16 +1387,16 @@ class VideoPlacerApp:
 
         # Re-verify target path and existing takes immediately before processing
         base_dir = self.base_directory.get()
-        col_a = self.selected_col_a.get()
-        col_b = self.selected_col_b.get()
+        category = self.selected_category.get() # Updated
+        word = self.selected_word.get()         # Updated
         interpreter_id = self.selected_interpreter_id.get()
 
-        if not all([base_dir, col_a, col_b, interpreter_id]):
+        if not all([base_dir, category, word, interpreter_id]): # Updated
              messagebox.showerror("Configuration Error", "Base directory, Category, Word, or Interpreter ID is missing.");
              logger.error("Processing attempted with missing configuration details.")
              return
 
-        target_folder_path = os.path.join(base_dir, col_a, col_b, interpreter_id)
+        target_folder_path = os.path.join(base_dir, category, word, interpreter_id) # Updated
         logger.debug(f"Processing target folder: {target_folder_path}")
 
         highest_take = 0
@@ -1491,24 +1536,19 @@ class VideoPlacerApp:
         self.clear_analysis_results()
         logger.debug("Analysis results cleared after processing.")
 
-        # Keep BaseDir, ID, ColA selected
-        # Clear Word selection to prompt user for next item
-        self.selected_col_b.set("")
-        self.col_b_combobox.set("") # Clear combobox display
-        logger.debug("Word selection cleared.")
+        # Clear Word selection from StringVars and TreeView selection
+        self.selected_word.set("")
+        # Category can remain selected, or clear both if desired:
+        # self.selected_category.set("")
+        # self.category_word_tree.selection_set(()) # Clear tree selection visually
+        # For now, let's assume user might want to process another word in the same category.
+        # If a category is still selected, the tree will show its words.
+        # If no category is selected, the tree will be at the top level.
+        logger.debug("Word selection (StringVar) cleared. TreeView selection might persist or be cleared by user action.")
 
-        # Repopulate Word list based on current Category (needed if user selects a new word in the same category)
-        self.populate_col_b()
-        logger.debug("Repopulated Word list.")
-
-        # Enable Word if options exist, disable File Select until Word is chosen again
-        col_b_options_exist_after_repop = bool(self.col_b_combobox['values'])
-        self.col_b_combobox.config(state='readonly' if col_b_options_exist_after_repop else 'disabled')
         self.select_files_button.config(state='disabled')
-        logger.debug(f"Word state after repopulation: {'readonly' if col_b_options_exist_after_repop else 'disabled'}, File Select disabled.")
-
-
-        self.status_message.set("Select name of the next Word.")
+        self.take_assignment_display.set("Takes: -")
+        self.status_message.set("Select a Word from the tree.") # Or "Select Category then Word"
         logger.info("UI reset for next Word selection.")
 
         self.check_button_state() # Ensure button states are correct after reset
@@ -1540,12 +1580,12 @@ if __name__ == "__main__":
     # The check here is redundant but kept for clarity based on the original structure
     # We can simplify this block significantly
     logger.debug("Entering __main__ block.")
+    # Dependency check (including TkinterDnD2) is now part of the initial try-except block at the top.
 
-    # The primary dependency check is handled at the top.
-    # If we reached here, dependencies should be installed.
-    # We can add a final check here to be extremely safe, but it's unlikely to fail now.
+    # This secondary check is mostly for defense-in-depth or if the top check was bypassed.
     try:
         # Simple check if the imported modules are available in the namespace
+        # tkinter_dnd_available is set at the top.
         # This is mostly for defense-in-depth if the above logic changes
         if 'cv2' not in sys.modules or 'PIL' not in sys.modules or \
            'skimage' not in sys.modules or 'numpy' not in sys.modules:
@@ -1556,7 +1596,7 @@ if __name__ == "__main__":
          # This block should ideally only be hit if something went wrong *after* the first check
          logger.critical(f"CRITICAL ERROR in __main__: Missing dependency {e}. Application cannot proceed.", exc_info=True)
          print(f"CRITICAL ERROR: Missing dependency {e}. Please install requirements.")
-         print("pip install opencv-python Pillow scikit-image numpy")
+         print("pip install opencv-python Pillow scikit-image numpy tkinterdnd2")
          root_check = tk.Tk(); root_check.withdraw() # Create a temporary root for the messagebox
          messagebox.showerror("Missing Dependencies", f"Error: {e.name} not found.\nPlease install requirements:\npip install opencv-python Pillow scikit-image numpy")
          root_check.destroy()
@@ -1569,8 +1609,16 @@ if __name__ == "__main__":
          root_check.destroy()
          sys.exit(1)
 
-
-    root = tk.Tk()
+    if tkinter_dnd_available:
+        try:
+            root = TkinterDnD.Tk()
+            logger.info("Root window created with TkinterDnD for drag-and-drop support.")
+        except Exception as e: # Catch potential errors if TkinterDnD.Tk() fails for some reason
+            logger.error(f"Failed to initialize TkinterDnD.Tk(): {e}. Falling back to standard tk.Tk(). Drag-and-drop will be disabled.", exc_info=True)
+            root = tk.Tk()
+    else:
+        root = tk.Tk()
+        logger.info("Root window created with standard tk.Tk(). Drag-and-drop is disabled.")
     # The App initialization logs start here
     app = VideoPlacerApp(root)
     logger.info("Starting Tkinter main loop.")
