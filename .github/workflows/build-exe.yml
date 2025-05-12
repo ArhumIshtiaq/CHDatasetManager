@@ -32,18 +32,18 @@ jobs:
 
     - name: Build executable with PyInstaller
       run: |
-        pyinstaller --name VideoPlacer ^
-                    --onefile ^
-                    --noconsole ^
-                    --icon=CHDatasetManager/assets/app_icon.ico ^
-                    --hidden-import=tkinterdnd2 ^
+        pyinstaller --name VideoPlacer `
+                    --onefile `
+                    --noconsole `
+                    --icon=CHDatasetManager/assets/app_icon.ico `
+                    --hidden-import=tkinterdnd2 `
                     CHDatasetManager/VideoPlacerv2.py
         # Notes:
         # - Update --icon path if your icon is elsewhere, or remove it.
         # - --noconsole is used for GUI applications to prevent a command window from appearing.
         # - --hidden-import=tkinterdnd2 is added as TkinterDnD2 can sometimes be missed by PyInstaller's analysis.
         #   If you encounter other "ModuleNotFound" errors for the .exe, add them as --hidden-import=modulename.
-        # - The `^` character is for line continuation in Windows shell.
+        # - The backtick (`) character is for line continuation in PowerShell.
 
     - name: Upload Executable Artifact
       uses: actions/upload-artifact@v4
