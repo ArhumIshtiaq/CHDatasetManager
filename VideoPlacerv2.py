@@ -214,6 +214,7 @@ class VideoPlacerApp:
             preview_label = ttk.Label(item_frame) # Size determined by image
             preview_label.pack(pady=(0,2))
             self.preview_labels.append(preview_label)
+            preview_label.bind("<Button-1>", lambda event, idx=i: self._toggle_approval_for_slot(idx))
 
             # Score Label
             score_label = ttk.Label(item_frame, textvariable=self.score_display_vars[i], style="Score.TLabel")
@@ -333,7 +334,8 @@ class VideoPlacerApp:
             self.interpreter_id_combobox.config(state='readonly')
             self.interpreter_id_combobox.focus()
             self.base_dir_button.config(state='disabled')
-            self.category_word_tree.config(state='disabled')
+            self.category_word_tree.unbind("<<TreeviewSelect>>")
+            logger.debug("Treeview unbind <<TreeviewSelect>> in select_base_dir")
             self.select_files_button.config(state='disabled')
             self.process_button.config(state='disabled') # Process button should also be disabled
             logger.debug("Enabled Interpreter ID combobox, disabled Base Dir button.")
@@ -396,7 +398,8 @@ class VideoPlacerApp:
         if not base_dir or not os.path.isdir(base_dir):
             logger.warning(f"Base directory '{base_dir}' not set or not a directory. Tree not populated.")
             self.category_word_tree.insert("", "end", text="Base directory not set or invalid.", open=False)
-            self.category_word_tree.config(state='disabled')
+            self.category_word_tree.unbind("<<TreeviewSelect>>")
+            logger.debug("Treeview unbind <<TreeviewSelect>> in populate_category_word_tree (base_dir invalid)")
             self.status_message.set("Error: Base directory invalid. Cannot load categories.")
             return
 
@@ -405,7 +408,8 @@ class VideoPlacerApp:
             if not categories:
                 logger.info(f"No category subdirectories found in {base_dir}.")
                 self.category_word_tree.insert("", "end", text="No categories found in base directory.", open=False)
-                self.category_word_tree.config(state='disabled') # Keep disabled if no categories
+                self.category_word_tree.unbind("<<TreeviewSelect>>") # Keep disabled if no categories
+                logger.debug("Treeview unbind <<TreeviewSelect>> in populate_category_word_tree (no categories)")
                 self.status_message.set("No categories found. Add category folders to the base directory.")
                 return
 
@@ -420,14 +424,16 @@ class VideoPlacerApp:
                     # Optional: Indicate if a category has no words
                     self.category_word_tree.insert(category_id, "end", text=" (No words)", tags=('empty_category_info',))
             
-            self.category_word_tree.config(state='normal')
+            self.category_word_tree.bind("<<TreeviewSelect>>", self.on_tree_item_select)
+            logger.debug("Treeview bind <<TreeviewSelect>> in populate_category_word_tree (success)")
             self.status_message.set("Select a Category, then a Word from the tree.")
             logger.info(f"Populated category/word tree with {len(categories)} categories from {base_dir}.")
 
         except Exception as e:
             logger.error(f"Error populating category/word tree: {e}", exc_info=True)
             messagebox.showerror("Tree Population Error", f"Failed to populate categories and words: {e}")
-            self.category_word_tree.config(state='disabled')
+            self.category_word_tree.unbind("<<TreeviewSelect>>")
+            logger.debug("Treeview unbind <<TreeviewSelect>> in populate_category_word_tree (exception)")
             self.status_message.set("Error populating category/word tree.")
 
     def on_tree_item_select(self, event=None):
@@ -1259,8 +1265,18 @@ class VideoPlacerApp:
 
         # Category/Word TreeView enabled if initial setup is done and base_directory is set
         # (its population logic handles if base_dir is invalid)
-        self.category_word_tree.config(state='normal' if self.initial_setup_done and self.base_directory.get() else 'disabled')
-        logger.debug(f"Category/Word TreeView state: {'normal' if self.category_word_tree.cget('state') == 'normal' else 'disabled'}")
+        if self.initial_setup_done and self.base_directory.get():
+            # Check if already bound to avoid duplicate bindings if check_button_state is called multiple times
+            # However, ttk.Treeview doesn't have a simple way to check existing bindings for a specific event sequence directly.
+            # For simplicity, we'll re-bind; Tkinter usually handles duplicate binds by replacing.
+            self.category_word_tree.bind("<<TreeviewSelect>>", self.on_tree_item_select)
+            logger.debug("Treeview bind <<TreeviewSelect>> in check_button_state (enabled)")
+            tree_state_log = "bound"
+        else:
+            self.category_word_tree.unbind("<<TreeviewSelect>>")
+            logger.debug("Treeview unbind <<TreeviewSelect>> in check_button_state (disabled)")
+            tree_state_log = "unbound"
+        logger.debug(f"Category/Word TreeView event <<TreeviewSelect>> is {tree_state_log}")
 
         # File Select enabled if Word is selected
         word_selected = bool(self.selected_word.get())
@@ -1554,6 +1570,29 @@ class VideoPlacerApp:
         self.check_button_state() # Ensure button states are correct after reset
         logger.debug("check_button_state called after processing and UI reset.")
 
+    def _toggle_approval_for_slot(self, slot_index):
+        """
+        Toggles the approval state for a given video slot if its checkbox is enabled.
+        Called when the preview label for a slot is clicked.
+        """
+        logger.debug(f"Preview clicked for slot {slot_index}. Attempting to toggle approval.")
+        if not (0 <= slot_index < MAX_VIDEOS):
+            logger.warning(f"Invalid slot_index {slot_index} in _toggle_approval_for_slot.")
+            return
+
+        checkbox = self.confirm_checkboxes[slot_index]
+        var = self.per_video_confirmed_vars[slot_index]
+
+        current_checkbox_state = checkbox.cget('state')
+        logger.debug(f"Checkbox for slot {slot_index} current state: '{current_checkbox_state}'")
+
+        if current_checkbox_state == 'normal': # Check if the checkbox is enabled
+            current_state = var.get()
+            var.set(not current_state)
+            logger.info(f"Approval for slot {slot_index} toggled (var was {current_state}, now {var.get()}) by preview click. Checkbox state was '{current_checkbox_state}'.")
+            self.check_button_state() # Manually call to update dependent button states
+        else:
+            logger.debug(f"Approval checkbox for slot {slot_index} is disabled. Click on preview ignored.")
 
     # --- NEW: Handle window closing ---
     def on_closing(self):
