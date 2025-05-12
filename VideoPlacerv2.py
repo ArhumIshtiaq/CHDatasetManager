@@ -585,167 +585,158 @@ class VideoPlacerApp:
 
 
     # --- MODIFIED Queue Checking (Runs in Main Thread) ---
+    def _update_scores_display_from_analysis(self, scores, num_selected):
+        logger.debug("Updating score display labels.")
+        for i in range(MAX_VIDEOS):
+            if i < num_selected:
+                current_score = scores[i]
+                if current_score is not None:
+                    self.score_display_vars[i].set(f"Score: {current_score:.3f}")
+                    logger.debug(f"Set score for slot {i}: {current_score:.3f}")
+                else:
+                    self.score_display_vars[i].set("Score: N/A")
+                    logger.debug(f"Set score for slot {i}: N/A (score was None)")
+            else:
+                self.score_display_vars[i].set("Score: -")
+                logger.debug(f"Set score for slot {i}: - (index out of bounds for selected files)")
+        
+        valid_scores = [s for s in scores[:num_selected] if s is not None]
+        max_score = 0.0
+        if valid_scores: max_score = max(valid_scores)
+        return valid_scores, max_score
+
+    def _create_previews_and_init_checkboxes(self, list_of_preview_pil_list, num_selected):
+        logger.debug("Creating PhotoImage objects and configuring checkboxes.")
+        self.preview_photo_images = [[] for _ in range(MAX_VIDEOS)] 
+        checkbox_states_after_load = {} 
+        num_videos_with_valid_previews = 0
+
+        for video_idx in range(MAX_VIDEOS):
+            photo_images_for_video = []
+            preview_success = False 
+
+            if video_idx < num_selected and video_idx < len(list_of_preview_pil_list):
+                pil_images_for_video = list_of_preview_pil_list[video_idx]
+                logger.debug(f"Processing preview images for slot {video_idx}. Found {len(pil_images_for_video)} PIL images.")
+
+                for img_list_idx, pil_image in enumerate(pil_images_for_video):
+                    if pil_image is not None:
+                        try:
+                            photo_img = ImageTk.PhotoImage(pil_image)
+                            photo_images_for_video.append(photo_img)
+                            preview_success = True
+                            logger.debug(f"Successfully created PhotoImage for frame {img_list_idx +1} in slot {video_idx}.")
+                        except Exception as e:
+                            logger.error(f"Error creating PhotoImage for image at list index {img_list_idx} in slot {video_idx}: {e}", exc_info=True)
+                            photo_images_for_video.append(None) 
+                    else:
+                        photo_images_for_video.append(None)
+                        logger.warning(f"PIL image was None for image at list index {img_list_idx} in slot {video_idx}.")
+            
+            self.preview_photo_images[video_idx] = photo_images_for_video
+
+            checkbox_state = 'normal' if preview_success else 'disabled'
+            checkbox_states_after_load[video_idx] = checkbox_state
+
+            if video_idx < len(self.confirm_checkboxes):
+                self.confirm_checkboxes[video_idx].config(state=checkbox_state)
+                logger.debug(f"Checkbox for slot {video_idx} set to state '{checkbox_state}'.")
+                if checkbox_state == 'disabled' and self.per_video_confirmed_vars[video_idx].get():
+                    self.per_video_confirmed_vars[video_idx].set(False)
+                    logger.debug(f"Checkbox for slot {video_idx} was disabled and unchecked.")
+            
+            if preview_success:
+                num_videos_with_valid_previews += 1
+                logger.debug(f"Starting preview animation for slot {video_idx}.")
+                self.start_preview_animation(video_idx)
+            elif video_idx < len(self.preview_labels): # Ensure label is empty if no previews
+                self.preview_labels[video_idx].config(image='')
+                logger.debug(f"No valid previews for slot {video_idx}. Animation not started, label cleared.")
+        
+        return num_videos_with_valid_previews, checkbox_states_after_load
+
+    def _apply_pre_marking_logic(self, scores, num_selected, filepaths, checkbox_states_after_load, valid_scores_list, max_score_val):
+        logger.debug("Starting pre-marking process.")
+        if num_selected <= 1 or len(valid_scores_list) < 2:
+            logger.info("Pre-marking skipped: not enough videos or valid scores.")
+            self.initial_confirmation_state = [self.per_video_confirmed_vars[i].get() if i < num_selected else False for i in range(num_selected)]
+            logger.debug(f"Stored initial confirmation state (pre-marking skipped): {self.initial_confirmation_state[:num_selected]}")
+            return
+
+        std_dev = np.std(valid_scores_list)
+        score_threshold_sd = max_score_val - PRE_MARKING_SD_FACTOR * std_dev
+        logger.info(f"Pre-marking logic: {num_selected} videos, {len(valid_scores_list)} valid. MaxScore={max_score_val:.3f}, SD={std_dev:.3f}, SD_Threshold={score_threshold_sd:.3f}, Fixed_Threshold={PRE_MARKING_SCORE_THRESHOLD}")
+
+        for i in range(num_selected):
+            current_score = scores[i] # Use the full scores list passed
+            is_enabled = checkbox_states_after_load.get(i) == 'normal'
+
+            if is_enabled and current_score is not None and \
+               (current_score >= score_threshold_sd or current_score >= PRE_MARKING_SCORE_THRESHOLD):
+                logger.info(f"Pre-marking video index {i} ('{os.path.basename(filepaths[i])}') - Score {current_score:.3f}. Checkbox state '{checkbox_states_after_load.get(i)}'.")
+                self.per_video_confirmed_vars[i].set(True)
+            elif is_enabled:
+                logger.debug(f"Video index {i} ('{os.path.basename(filepaths[i])}') not pre-marked. Score {current_score}. Checkbox state '{checkbox_states_after_load.get(i)}'.")
+            else:
+                logger.debug(f"Video index {i} ('{os.path.basename(filepaths[i])}') not pre-marked (checkbox disabled). Score: {current_score}.")
+        
+        self.initial_confirmation_state = [self.per_video_confirmed_vars[i].get() if i < num_selected else False for i in range(num_selected)]
+        logger.debug(f"Stored initial confirmation state after pre-marking: {self.initial_confirmation_state[:num_selected]}")
+
+    def _report_analysis_issues(self, errors):
+        if errors:
+            messagebox.showwarning("Analysis Issues", "Encountered issues during analysis:\n- " + "\n- ".join(errors))
+            logger.warning(f"Analysis completed with {len(errors)} reported issues.")
+
+    def _finalize_analysis_ui_updates(self, num_videos_with_valid_previews):
+        if num_videos_with_valid_previews > 0:
+            logger.debug("Valid previews found. Calculating take assignment.")
+            self.calculate_and_display_take_assignment()
+        else:
+            self.take_assignment_display.set("Takes: Error")
+            self.status_message.set("Analysis failed for all videos. Cannot assign takes.")
+            logger.error("Analysis failed for all selected videos. No valid previews/results to assign takes.")
+        
+        self.check_button_state()
+        logger.debug("check_button_state called after analysis results processed.")
+
+    def _handle_analysis_completion(self, result):
+        logger.info("Processing 'analysis_complete' message.")
+        self.is_analysis_running = False
+        logger.debug("is_analysis_running set to False.")
+
+        list_of_preview_pil_list = result.get("previews", [])
+        self.per_video_similarity_scores = result.get("scores", [None] * MAX_VIDEOS)
+        errors = result.get("errors", [])
+        filepaths = result.get("filepaths", [])
+        num_selected = len(filepaths)
+
+        logger.debug(f"Received scores: {self.per_video_similarity_scores}")
+        logger.debug(f"Received errors: {errors}")
+        logger.debug(f"Received previews list structure: {len(list_of_preview_pil_list)} lists of previews.")
+
+        valid_scores_list, max_score_val = self._update_scores_display_from_analysis(self.per_video_similarity_scores, num_selected)
+        
+        num_valid_previews, cb_states = self._create_previews_and_init_checkboxes(list_of_preview_pil_list, num_selected)
+        
+        self._apply_pre_marking_logic(self.per_video_similarity_scores, num_selected, filepaths, cb_states, valid_scores_list, max_score_val)
+        
+        self._report_analysis_issues(errors)
+        
+        self._finalize_analysis_ui_updates(num_valid_previews)
+
+
     def check_analysis_queue(self):
         """Checks the queue for results, displays scores, starts animations, pre-marks."""
         try:
-            # logger.debug("Checking analysis queue...") # Too noisy for debug unless needed
             result = self.analysis_queue.get_nowait()
             logger.info("Received message from analysis queue.")
 
-            # Check the type of message from the queue
             if result.get('type') == 'analysis_complete':
-                logger.info("Processing 'analysis_complete' message.")
-                self.is_analysis_running = False
-                logger.debug("is_analysis_running set to False.")
-
-                # Retrieve results using the new keys
-                list_of_preview_pil_list = result.get("previews", [])
-                self.per_video_similarity_scores = result.get("scores", [None] * MAX_VIDEOS)
-                errors = result.get("errors", [])
-                filepaths = result.get("filepaths", []) # Get filepaths for context
-                num_selected = len(filepaths) # Use the actual number of files selected
-
-                logger.debug(f"Received scores: {self.per_video_similarity_scores}")
-                logger.debug(f"Received errors: {errors}")
-                logger.debug(f"Received previews list structure: {len(list_of_preview_pil_list)} lists of previews.")
-
-
-                # --- Update Score Display ---
-                logger.debug("Updating score display labels.")
-                valid_scores = [s for s in self.per_video_similarity_scores[:num_selected] if s is not None]
-                max_score = 0.0
-                if valid_scores: max_score = max(valid_scores)
-                logger.debug(f"Valid scores for pre-marking: {valid_scores}, Max Score: {max_score:.3f}")
-
-
-                for i in range(MAX_VIDEOS):
-                    if i < num_selected:
-                         current_score = self.per_video_similarity_scores[i]
-                         if current_score is not None:
-                             self.score_display_vars[i].set(f"Score: {current_score:.3f}")
-                             logger.debug(f"Set score for slot {i}: {current_score:.3f}")
-                         else:
-                             self.score_display_vars[i].set("Score: N/A")
-                             logger.debug(f"Set score for slot {i}: N/A (score was None)")
-                    else:
-                        self.score_display_vars[i].set("Score: -")
-                        logger.debug(f"Set score for slot {i}: - (index out of bounds for selected files)")
-
-
-                # --- Create PhotoImage objects for previews and enable/disable checkboxes ---
-                logger.debug("Creating PhotoImage objects and configuring checkboxes.")
-                self.preview_photo_images = [[] for _ in range(MAX_VIDEOS)] # Reset list of lists
-                checkbox_states_after_load = {} # Map index to state ('normal', 'disabled')
-                num_videos_with_valid_previews = 0 # Count videos that successfully loaded at least one preview
-
-                for video_idx in range(MAX_VIDEOS):
-                    photo_images_for_video = []
-                    preview_success = False # Track if at least one preview frame loaded for this video
-
-                    if video_idx < num_selected and video_idx < len(list_of_preview_pil_list):
-                        pil_images_for_video = list_of_preview_pil_list[video_idx]
-                        logger.debug(f"Processing preview images for slot {video_idx}. Found {len(pil_images_for_video)} potential PIL images (orig+flow).")
-
-                        # Iterate through all images provided for this video (original and flow frames)
-                        for img_list_idx, pil_image in enumerate(pil_images_for_video):
-                            if pil_image is not None:
-                                try:
-                                    photo_img = ImageTk.PhotoImage(pil_image)
-                                    photo_images_for_video.append(photo_img)
-                                    preview_success = True
-                                    # Determine if it's an original or flow frame for logging
-                                    logger.debug(f"Successfully created PhotoImage for original frame {img_list_idx +1} (list index {img_list_idx}) in slot {video_idx}.")
-                                except Exception as e:
-                                    logger.error(f"Error creating PhotoImage for image at list index {img_list_idx} in slot {video_idx}: {e}", exc_info=True)
-                                    photo_images_for_video.append(None) # Add placeholder on error
-                            else:
-                                photo_images_for_video.append(None) # Add placeholder if no PIL image was provided
-                                # This case might indicate an issue upstream if a PIL image was expected
-                                logger.warning(f"PIL image was None for image at list index {img_list_idx} in slot {video_idx}.")
-                    self.preview_photo_images[video_idx] = photo_images_for_video # Store list of PhotoImages
-
-                    # Determine checkbox state based on whether *any* preview frames loaded for this video
-                    checkbox_state = 'normal' if preview_success else 'disabled'
-                    checkbox_states_after_load[video_idx] = checkbox_state
-
-                    if video_idx < len(self.confirm_checkboxes):
-                        self.confirm_checkboxes[video_idx].config(state=checkbox_state)
-                        logger.debug(f"Checkbox for slot {video_idx} set to state '{checkbox_state}'.")
-                        if checkbox_state == 'disabled':
-                            # If disabled, ensure the checkbox is unchecked
-                            if self.per_video_confirmed_vars[video_idx].get():
-                                self.per_video_confirmed_vars[video_idx].set(False)
-                                logger.debug(f"Checkbox for slot {video_idx} was disabled and unchecked.")
-                            else:
-                                logger.debug(f"Checkbox for slot {video_idx} was disabled.")
-
-                    if preview_success:
-                        num_videos_with_valid_previews += 1
-                        # --- Start Animation for this slot ---
-                        logger.debug(f"Starting preview animation for slot {video_idx}.")
-                        self.start_preview_animation(video_idx)
-                    else:
-                         logger.debug(f"No valid previews loaded for slot {video_idx}. Animation not started.")
-                         # Ensure label is empty if no previews loaded
-                         if video_idx < len(self.preview_labels):
-                            self.preview_labels[video_idx].config(image='')
-
-
-                # --- Pre-mark Checkbox(es) based on Standard Deviation ---
-                logger.debug("Starting pre-marking process.")
-                # Reset all checkboxes first (already done in clear_analysis_results, but good to re-iterate intention)
-                # for i in range(MAX_VIDEOS): self.per_video_confirmed_vars[i].set(False) # Already reset
-
-                # Pre-marking logic applies only if there's more than one video and at least two have valid scores
-                if num_selected > 1 and len(valid_scores) >= 2:
-                    std_dev = np.std(valid_scores)
-                    score_threshold = max_score - PRE_MARKING_SD_FACTOR * std_dev
-                    logger.info(f"Pre-marking logic: {num_selected} videos selected, {len(valid_scores)} valid scores. MaxScore={max_score:.3f}, SD={std_dev:.3f}, Threshold={score_threshold:.3f}")
-
-                    # Iterate through the indices of the *selected* files
-                    for i in range(num_selected):
-                        current_score = self.per_video_similarity_scores[i]
-                        # Check if the checkbox for this slot was successfully enabled
-                        is_enabled = checkbox_states_after_load.get(i) == 'normal'
-
-                        # Check score vs threshold AND ensure the checkbox is enabled
-                        if is_enabled and current_score is not None and (current_score >= score_threshold or current_score >= PRE_MARKING_SCORE_THRESHOLD):
-                            logger.info(f"Pre-marking video index {i} ('{os.path.basename(filepaths[i])}') - Score {current_score:.3f} >= Threshold {score_threshold:.3f} or {PRE_MARKING_SCORE_THRESHOLD}. Checkbox state was '{checkbox_states_after_load.get(i)}'.")
-                            self.per_video_confirmed_vars[i].set(True)
-                        elif is_enabled:
-                             logger.debug(f"Video index {i} ('{os.path.basename(filepaths[i])}') not pre-marked. Score {current_score} (is None={current_score is None}). Threshold check: {current_score >= score_threshold if current_score is not None else 'N/A'} | {current_score >= PRE_MARKING_SCORE_THRESHOLD if current_score is not None else 'N/A'}. Checkbox state was '{checkbox_states_after_load.get(i)}'.")
-                        else:
-                            logger.debug(f"Video index {i} ('{os.path.basename(filepaths[i])}') not pre-marked because checkbox was disabled (state: '{checkbox_states_after_load.get(i)}'). Score: {current_score}.")
-
-
-                # --- Store Initial Confirmation State for Logging ---
-                # This state reflects the checkboxes AFTER analysis and pre-marking
-                self.initial_confirmation_state = [self.per_video_confirmed_vars[i].get() if i < MAX_VIDEOS else False for i in range(num_selected)]
-                logger.debug(f"Stored initial confirmation state after pre-marking: {self.initial_confirmation_state[:num_selected]}")
-
-
-                # Report errors from thread
-                if errors:
-                    messagebox.showwarning("Analysis Issues", "Encountered issues during analysis:\n- " + "\n- ".join(errors))
-                    logger.warning(f"Analysis completed with {len(errors)} reported issues.")
-
-                # Calculate take assignment ONLY if analysis produced results (at least one valid preview)
-                if num_videos_with_valid_previews > 0:
-                    logger.debug("Valid previews found. Calculating take assignment.")
-                    self.calculate_and_display_take_assignment()
-                    # Status message updated in calculate_and_display_take_assignment if successful
-                else:
-                    self.take_assignment_display.set("Takes: Error")
-                    self.status_message.set("Analysis failed for all videos. Cannot assign takes.")
-                    logger.error("Analysis failed for all selected videos. No valid previews/results to assign takes.")
-
-
-                self.check_button_state() # Update process button state based on confirmation checkboxes
-                logger.debug("check_button_state called after analysis results processed.")
-            # else: Handle other message types if needed in the future
+                self._handle_analysis_completion(result)
+            # else: Handle other message types if needed
 
         except queue.Empty:
-            # logger.debug("Analysis queue empty.") # Too noisy
             pass # No item in the queue, just continue
         except Exception as e:
             logger.error(f"Unexpected error in check_analysis_queue: {e}", exc_info=True)
@@ -1027,105 +1018,99 @@ class VideoPlacerApp:
 
 
     # --- Processing Logic ---
-    def process_selected_videos(self):
-        """Handles moving and renaming ONLY the individually approved video files."""
-        logger.info("Process button clicked. Starting video placement.")
-
+    def _validate_processing_prerequisites(self):
+        """Checks if all conditions are met before starting the file processing."""
         if self.is_analysis_running:
-            messagebox.showwarning("Busy", "Analysis is in progress. Please wait.");
+            messagebox.showwarning("Busy", "Analysis is in progress. Please wait.")
             logger.warning("Attempted to process files while analysis is running.")
-            return
+            return False
 
-        selected_files = self.selected_file_paths_tuple
-        num_selected = len(selected_files)
-        if num_selected == 0:
-            messagebox.showerror("Error", "No video files selected.");
+        if not self.selected_file_paths_tuple:
+            messagebox.showerror("Error", "No video files selected.")
             logger.error("Attempted to process with no files selected.")
-            return
+            return False
+        
+        num_selected = len(self.selected_file_paths_tuple)
+        # Store confirmed indices and other details as temporary instance attributes for helper methods
+        self.confirmed_indices_for_processing_ = [i for i, var in enumerate(self.per_video_confirmed_vars) if i < num_selected and var.get()]
 
-        # Identify which indices among the selected files are approved
-        confirmed_indices = [i for i, var in enumerate(self.per_video_confirmed_vars) if i < num_selected and var.get()]
-        logger.debug(f"Selected file indices: {list(range(num_selected))}")
-        logger.debug(f"Confirmed indices based on checkboxes: {confirmed_indices}")
-
-
-        if not confirmed_indices:
-            messagebox.showerror("No Videos Approved", "Please approve at least one video using the 'Approve' checkbox below it.");
+        if not self.confirmed_indices_for_processing_:
+            messagebox.showerror("No Videos Approved", "Please approve at least one video using the 'Approve' checkbox below it.")
             logger.warning("Process button clicked but no videos were approved.")
-            return
+            return False
 
-        # Re-verify target path and existing takes immediately before processing
         base_dir = self.base_directory.get()
-        category = self.selected_category.get() # Updated
-        word = self.selected_word.get()         # Updated
+        category = self.selected_category.get()
+        word = self.selected_word.get()
         interpreter_id = self.selected_interpreter_id.get()
 
-        if not all([base_dir, category, word, interpreter_id]): # Updated
-             messagebox.showerror("Configuration Error", "Base directory, Category, Word, or Interpreter ID is missing.");
+        if not all([base_dir, category, word, interpreter_id]):
+             messagebox.showerror("Configuration Error", "Base directory, Category, Word, or Interpreter ID is missing.")
              logger.error("Processing attempted with missing configuration details.")
-             return
-
-        target_folder_path = os.path.join(base_dir, category, word, interpreter_id) # Updated
-        logger.debug(f"Processing target folder: {target_folder_path}")
-
-        start_take = determine_next_take_number(target_folder_path, interpreter_id)
-        if start_take == -1: # Error occurred
-            messagebox.showerror("Error", f"Failed to re-verify existing takes before processing.");
-            return
+             return False
         
+        self.target_folder_path_for_processing_ = os.path.join(base_dir, category, word, interpreter_id)
+        self.interpreter_id_for_processing_ = interpreter_id
+        return True
+
+    def _verify_and_calculate_takes_for_processing(self):
+        """Re-verifies existing takes and checks if approved videos fit."""
+        start_take = determine_next_take_number(self.target_folder_path_for_processing_, self.interpreter_id_for_processing_)
+        if start_take == -1:
+            messagebox.showerror("Error", "Failed to re-verify existing takes before processing.")
+            logger.error(f"Error determining next take in {self.target_folder_path_for_processing_}")
+            return None 
+
         logger.info(f"Re-verified. Starting take for new files will be {start_take}.")
-
-
-        num_approved = len(confirmed_indices)
+        
+        num_approved = len(self.confirmed_indices_for_processing_)
         final_take_needed = start_take + num_approved - 1
 
-        if final_take_needed > 4:
+        if final_take_needed > 4: # Assuming MAX_TAKES is 4, consistent with MAX_VIDEOS
             available_slots = 4 - start_take + 1
-            messagebox.showerror("Error", f"Cannot process. Too many videos approved ({num_approved}) for available slots (Max {available_slots}, starting from take {start_take}). Please uncheck some.");
+            messagebox.showerror("Error", f"Cannot process. Too many videos approved ({num_approved}) for available slots (Max {available_slots}, starting from take {start_take}). Please uncheck some.")
             logger.warning(f"Processing aborted: {num_approved} videos approved, but only {available_slots} slots available starting from {start_take}. Max take needed: {final_take_needed}.")
-            self.check_button_state(); # Update button state
-            return
+            return None
+        
+        self.start_take_for_processing_ = start_take # Store for _execute_file_operations
+        return start_take
 
-        # Prepare data for CSV logging *before* processing files
-        # This is done by calling the internal helper which then calls the file_system_operations one
-        self._trigger_csv_logging(
-            [idx for idx in range(num_selected) if idx in confirmed_indices], # Log only approved indices
-            list(range(start_take, start_take + num_approved)) # Log assigned take numbers
-        )
-
-        # --- Perform File Movement and Renaming ---
+    def _execute_file_operations(self):
+        """Moves and renames the approved video files."""
         errors = []
         success_count = 0
+        num_approved = len(self.confirmed_indices_for_processing_)
+        
         self.status_message.set(f"Processing {num_approved} approved file(s)...")
-        self.process_button.config(state='disabled') # Disable button during processing
-        self.master.update_idletasks() # Update GUI immediately
+        self.process_button.config(state='disabled')
+        self.master.update_idletasks()
 
-        take_counter = 0 # Counter for assigning takes to APPROVED files only
+        take_counter = 0 
         logger.info(f"Starting file movement for {num_approved} approved files.")
 
-        for index, source_video_path in enumerate(selected_files):
-            # Only process files whose index is in the confirmed_indices list
-            if index in confirmed_indices:
-                assigned_take_number = start_take + take_counter # Assign next available take number
-                original_filename = os.path.basename(source_video_path)
+        for index, source_video_path in enumerate(self.selected_file_paths_tuple):
+            if index in self.confirmed_indices_for_processing_:
+                assigned_take_number = self.start_take_for_processing_ + take_counter
                 _, file_extension = os.path.splitext(source_video_path)
-                new_filename = f"{interpreter_id}_{assigned_take_number}{file_extension}"
+                new_filename = f"{self.interpreter_id_for_processing_}_{assigned_take_number}{file_extension}"
 
                 success, error_msg = move_and_rename_video(
                     source_video_path,
-                    target_folder_path,
+                    self.target_folder_path_for_processing_,
                     new_filename
                 )
                 if success:
                     success_count += 1
-                    take_counter += 1 # Increment take counter only for successful moves
+                    take_counter += 1
                 else:
                     errors.append(error_msg)
-
+        
         logger.info(f"Finished file movement. Successfully processed {success_count} files with {len(errors)} errors.")
+        return success_count, errors, num_approved
 
-        # --- Show Completion Message ---
-        final_message = f"Processed {success_count}/{num_approved} approved files."
+    def _finalize_processing_and_reset_ui(self, success_count, errors, num_approved_initially):
+        """Shows completion message and resets the UI for the next operation."""
+        final_message = f"Processed {success_count}/{num_approved_initially} approved files."
         if errors:
             final_message += f"\n\nEncountered {len(errors)} error(s):\n" + "\n".join(f"- {e}" for e in errors)
             messagebox.showwarning("Processing Complete with Errors", final_message)
@@ -1136,33 +1121,46 @@ class VideoPlacerApp:
             self.status_message.set("Processing complete.")
             logger.info("Processing completed successfully.")
 
-        # --- Reset UI for next word/session ---
         logger.debug("Resetting UI state after processing.")
         self.selected_file_paths_tuple = ()
         self.selected_files_info.set("No files selected")
-        logger.debug("File selection state reset.")
-
-        # Clear analysis results and stop animations
         self.clear_analysis_results()
-        logger.debug("Analysis results cleared after processing.")
-
-        # Clear Word selection from StringVars and TreeView selection
-        self.selected_word.set("")
-        # Category can remain selected, or clear both if desired:
-        # self.selected_category.set("")
-        # self.category_word_tree.selection_set(()) # Clear tree selection visually
-        # For now, let's assume user might want to process another word in the same category.
-        # If a category is still selected, the tree will show its words.
-        # If no category is selected, the tree will be at the top level.
-        logger.debug("Word selection (StringVar) cleared. TreeView selection might persist or be cleared by user action.")
-
+        self.selected_word.set("") 
         self.select_files_button.config(state='disabled')
         self.take_assignment_display.set("Takes: -")
-        self.status_message.set("Select a Word from the tree.") # Or "Select Category then Word"
+        self.status_message.set("Select a Word from the tree.")
         logger.info("UI reset for next Word selection.")
+        self.check_button_state()
 
-        self.check_button_state() # Ensure button states are correct after reset
-        logger.debug("check_button_state called after processing and UI reset.")
+    def process_selected_videos(self):
+        """Handles moving and renaming ONLY the individually approved video files."""
+        logger.info("Process button clicked. Starting video placement.")
+
+        if not self._validate_processing_prerequisites():
+            self.check_button_state() 
+            return
+
+        start_take = self._verify_and_calculate_takes_for_processing()
+        if start_take is None: 
+            self.check_button_state()
+            return
+        
+        # Log confirmed actions before executing them
+        assigned_take_numbers_for_log = list(range(self.start_take_for_processing_, self.start_take_for_processing_ + len(self.confirmed_indices_for_processing_)))
+        self._trigger_csv_logging(
+            self.confirmed_indices_for_processing_,
+            assigned_take_numbers_for_log
+        )
+
+        success_count, errors, num_approved = self._execute_file_operations()
+        
+        self._finalize_processing_and_reset_ui(success_count, errors, num_approved)
+        
+        # Clean up temporary instance attributes used by helpers
+        del self.confirmed_indices_for_processing_
+        del self.target_folder_path_for_processing_
+        del self.interpreter_id_for_processing_
+        del self.start_take_for_processing_
 
     def _toggle_approval_for_slot(self, slot_index):
         """

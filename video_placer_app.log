@@ -7088,3 +7088,290 @@ _tkinter.TclError: unknown option "-state"
 2025-05-12 16:50:15,884 - DEBUG - MainThread - VideoPlacerv2 - on_closing - All known animation 'after' jobs cancelled.
 2025-05-12 16:50:15,900 - INFO - MainThread - VideoPlacerv2 - on_closing - Window destroyed. Application exiting.
 2025-05-12 16:50:15,900 - INFO - MainThread - VideoPlacerv2 - <module> - Tkinter main loop finished.
+2025-05-12 17:53:01,138 - INFO - MainThread - logger_config - setup_logging - Logging configured via logger_config.py.
+2025-05-12 17:53:01,339 - DEBUG - MainThread - VideoPlacerv2 - <module> - Attempting to import dependencies: cv2, PIL, skimage, numpy, tkinterdnd2
+2025-05-12 17:53:01,339 - DEBUG - MainThread - VideoPlacerv2 - <module> - Core dependencies (cv2, PIL, skimage, numpy) imported successfully.
+2025-05-12 17:53:01,341 - DEBUG - MainThread - VideoPlacerv2 - <module> - TkinterDnD2 imported successfully for drag-and-drop.
+2025-05-12 17:53:01,341 - DEBUG - MainThread - VideoPlacerv2 - <module> - Entering __main__ block.
+2025-05-12 17:53:01,341 - DEBUG - MainThread - VideoPlacerv2 - <module> - Dependencies confirmed available in __main__ namespace.
+2025-05-12 17:53:01,380 - INFO - MainThread - VideoPlacerv2 - <module> - Root window created with TkinterDnD for drag-and-drop support.
+2025-05-12 17:53:01,380 - INFO - MainThread - VideoPlacerv2 - __init__ - Initializing VideoPlacerApp GUI.
+2025-05-12 17:53:01,400 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Window size set to 650x750, centered at (1395,345) on screen 3440x1440.
+2025-05-12 17:53:01,400 - DEBUG - MainThread - VideoPlacerv2 - __init__ - State variable 'initial_setup_done' initialized to False.
+2025-05-12 17:53:01,400 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Tkinter variables and state variables initialized.
+2025-05-12 17:53:01,400 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Configured ttk styles.
+2025-05-12 17:53:01,401 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Main frame created and packed.
+2025-05-12 17:53:01,401 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Defined grid row assignments: basedir=0, id=1, treeview=2, fileselect=3, verification=4, analysis_info=5, process_btn=6, status=7
+2025-05-12 17:53:01,403 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Base directory widgets placed.
+2025-05-12 17:53:01,406 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Interpreter ID widgets placed.
+2025-05-12 17:53:01,408 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Category/Word TreeView placed.
+2025-05-12 17:53:01,410 - DEBUG - MainThread - VideoPlacerv2 - __init__ - File selection widgets placed.
+2025-05-12 17:53:01,412 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Verification area frame placed.
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Created 4 slots in verification frame (preview labels, score labels, checkboxes).
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Take assignment display label placed.
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Process button placed.
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Status label placed.
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Main frame grid configured for expansion.
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Started check_analysis_queue loop via master.after.
+2025-05-12 17:53:01,420 - DEBUG - MainThread - VideoPlacerv2 - __init__ - Bound on_closing method to window close event.
+2025-05-12 17:53:01,424 - INFO - MainThread - VideoPlacerv2 - __init__ - Drag and drop enabled for the verification frame.
+2025-05-12 17:53:01,424 - INFO - MainThread - VideoPlacerv2 - __init__ - VideoPlacerApp GUI initialization complete.
+2025-05-12 17:53:01,425 - INFO - MainThread - VideoPlacerv2 - <module> - Starting Tkinter main loop.
+2025-05-12 17:53:02,581 - DEBUG - MainThread - VideoPlacerv2 - select_base_dir - select_base_dir called.
+2025-05-12 17:53:07,718 - INFO - MainThread - VideoPlacerv2 - select_base_dir - Base directory selected: D:/AI Dataset
+2025-05-12 17:53:07,718 - DEBUG - MainThread - VideoPlacerv2 - select_base_dir - Treeview unbind <<TreeviewSelect>> in select_base_dir
+2025-05-12 17:53:07,718 - DEBUG - MainThread - VideoPlacerv2 - select_base_dir - Enabled Interpreter ID combobox, disabled Base Dir button.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - on_id_select called. Event: <VirtualEvent event x=0 y=0>
+2025-05-12 17:53:09,377 - INFO - MainThread - VideoPlacerv2 - on_id_select - Interpreter ID selected: 004. Initial setup now complete.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - Calling populate_category_word_tree.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - populate_category_word_tree - populate_category_word_tree called.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - populate_category_word_tree - Cleared existing items from category_word_tree.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - file_system_operations - get_directory_structure - Directory structure scanned for D:/AI Dataset: 1 categories.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - populate_category_word_tree - Treeview bind <<TreeviewSelect>> in populate_category_word_tree (success)
+2025-05-12 17:53:09,377 - INFO - MainThread - VideoPlacerv2 - populate_category_word_tree - Populated category/word tree with 1 categories from D:/AI Dataset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - Category and Word selections (StringVar) cleared. Tree selection cleared.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - Word selection and file selection cleared.
+2025-05-12 17:53:09,377 - INFO - MainThread - VideoPlacerv2 - clear_analysis_results - Clearing previous analysis results and stopping animations.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Similarity scores reset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Score display labels reset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Take assignment display reset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Initial confirmation state tracking reset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Approval checkboxes reset and disabled.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview photo image list reset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 0.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 1.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 2.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 3.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview animation indices reset.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Finished clearing analysis results.
+2025-05-12 17:53:09,377 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - Analysis results cleared.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - File select button disabled.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to disabled.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - check_button_state called after Category selection.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - on_id_select - on_id_select finished processing.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - on_tree_item_select called.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - Tree selection cleared. Category and Word reset.
+2025-05-12 17:53:09,379 - INFO - MainThread - VideoPlacerv2 - clear_analysis_results - Clearing previous analysis results and stopping animations.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Similarity scores reset.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Score display labels reset.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Take assignment display reset.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Initial confirmation state tracking reset.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Approval checkboxes reset and disabled.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview photo image list reset.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 0.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 1.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 2.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 3.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview animation indices reset.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Finished clearing analysis results.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to disabled.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:09,379 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - on_tree_item_select finished processing.
+2025-05-12 17:53:10,690 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - on_tree_item_select called.
+2025-05-12 17:53:10,691 - INFO - MainThread - VideoPlacerv2 - on_tree_item_select - Category selected: 'Footage'. Word cleared.
+2025-05-12 17:53:10,691 - INFO - MainThread - VideoPlacerv2 - clear_analysis_results - Clearing previous analysis results and stopping animations.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Similarity scores reset.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Score display labels reset.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Take assignment display reset.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Initial confirmation state tracking reset.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Approval checkboxes reset and disabled.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview photo image list reset.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 0.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 1.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 2.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 3.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview animation indices reset.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Finished clearing analysis results.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to disabled.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:10,691 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - on_tree_item_select finished processing.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - on_tree_item_select called.
+2025-05-12 17:53:11,059 - INFO - MainThread - VideoPlacerv2 - on_tree_item_select - Word selected: 'Raw' under Category: 'Footage'
+2025-05-12 17:53:11,059 - INFO - MainThread - VideoPlacerv2 - clear_analysis_results - Clearing previous analysis results and stopping animations.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Similarity scores reset.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Score display labels reset.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Take assignment display reset.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Initial confirmation state tracking reset.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Approval checkboxes reset and disabled.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview photo image list reset.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 0.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 1.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 2.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 3.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview animation indices reset.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Finished clearing analysis results.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - calculate_and_display_take_assignment called.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - No files selected, take assignment set to '-'.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to normal.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to disabled. Conditions: FilesSelected=False, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-05-12 17:53:11,059 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:11,060 - DEBUG - MainThread - VideoPlacerv2 - on_tree_item_select - on_tree_item_select finished processing.
+2025-05-12 17:53:12,085 - DEBUG - MainThread - VideoPlacerv2 - select_video_files - select_video_files called.
+2025-05-12 17:53:12,085 - DEBUG - MainThread - VideoPlacerv2 - select_video_files - Opening file dialog to select up to 4 video files.
+2025-05-12 17:53:16,936 - INFO - MainThread - VideoPlacerv2 - _process_filepaths_for_analysis - Processing 4 file(s) for analysis via _process_filepaths_for_analysis.
+2025-05-12 17:53:16,936 - INFO - MainThread - VideoPlacerv2 - clear_analysis_results - Clearing previous analysis results and stopping animations.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Similarity scores reset.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Score display labels reset.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Take assignment display reset.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Initial confirmation state tracking reset.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Approval checkboxes reset and disabled.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview photo image list reset.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 0.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 1.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 2.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Cleared preview image for slot 3.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Preview animation indices reset.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - clear_analysis_results - Finished clearing analysis results.
+2025-05-12 17:53:16,936 - DEBUG - MainThread - VideoPlacerv2 - _process_filepaths_for_analysis - Cleared previous analysis results and animations before new analysis.
+2025-05-12 17:53:16,937 - INFO - MainThread - VideoPlacerv2 - _process_filepaths_for_analysis - Selected 4 video files for analysis: C0210.mp4; C0211.mp4; C0212.mp4; C0213.mp4
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to normal.
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to disabled. Conditions: FilesSelected=True, ValidTakes=False, Approved=False, AnalysisRunning=False.
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:16,937 - INFO - MainThread - VideoPlacerv2 - _process_filepaths_for_analysis - Analysis started. Setting is_analysis_running to True.
+2025-05-12 17:53:16,937 - INFO - Thread-1 (run_analysis_in_thread) - video_processing_operations - run_analysis_in_thread - Analysis thread started for 4 videos.
+2025-05-12 17:53:16,937 - DEBUG - MainThread - VideoPlacerv2 - _process_filepaths_for_analysis - Analysis thread started: Thread-1 (run_analysis_in_thread)
+2025-05-12 17:53:16,938 - DEBUG - ThreadPoolExecutor-0_0 - video_processing_operations - _extract_frames_for_video - Extracting frames from: C0210.mp4
+2025-05-12 17:53:16,939 - DEBUG - ThreadPoolExecutor-0_1 - video_processing_operations - _extract_frames_for_video - Extracting frames from: C0211.mp4
+2025-05-12 17:53:16,939 - DEBUG - ThreadPoolExecutor-0_2 - video_processing_operations - _extract_frames_for_video - Extracting frames from: C0212.mp4
+2025-05-12 17:53:16,939 - DEBUG - ThreadPoolExecutor-0_3 - video_processing_operations - _extract_frames_for_video - Extracting frames from: C0213.mp4
+2025-05-12 17:53:17,819 - INFO - Thread-1 (run_analysis_in_thread) - video_processing_operations - run_analysis_in_thread - Analysis thread finished.
+2025-05-12 17:53:17,868 - INFO - MainThread - VideoPlacerv2 - check_analysis_queue - Received message from analysis queue.
+2025-05-12 17:53:17,868 - INFO - MainThread - VideoPlacerv2 - _handle_analysis_completion - Processing 'analysis_complete' message.
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _handle_analysis_completion - is_analysis_running set to False.
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _handle_analysis_completion - Received scores: [np.float64(0.6877054169044968), np.float64(0.7133655929107837), np.float64(0.760668451756751), np.float64(0.7399979032551928)]
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _handle_analysis_completion - Received errors: []
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _handle_analysis_completion - Received previews list structure: 4 lists of previews.
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _update_scores_display_from_analysis - Updating score display labels.
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _update_scores_display_from_analysis - Set score for slot 0: 0.688
+2025-05-12 17:53:17,868 - DEBUG - MainThread - VideoPlacerv2 - _update_scores_display_from_analysis - Set score for slot 1: 0.713
+2025-05-12 17:53:17,869 - DEBUG - MainThread - VideoPlacerv2 - _update_scores_display_from_analysis - Set score for slot 2: 0.761
+2025-05-12 17:53:17,869 - DEBUG - MainThread - VideoPlacerv2 - _update_scores_display_from_analysis - Set score for slot 3: 0.740
+2025-05-12 17:53:17,869 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Creating PhotoImage objects and configuring checkboxes.
+2025-05-12 17:53:17,869 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Processing preview images for slot 0. Found 5 PIL images.
+2025-05-12 17:53:17,872 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 1 in slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 2 in slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 3 in slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 4 in slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 5 in slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Checkbox for slot 0 set to state 'normal'.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Starting preview animation for slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Attempting to start/restart animation for slot 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Reset animation index for slot 0 to 0.
+2025-05-12 17:53:17,873 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Starting animation update cycle for slot 0 with 5 valid frames.
+2025-05-12 17:53:17,874 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Processing preview images for slot 1. Found 5 PIL images.
+2025-05-12 17:53:17,874 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 1 in slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 2 in slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 3 in slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 4 in slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 5 in slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Checkbox for slot 1 set to state 'normal'.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Starting preview animation for slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Attempting to start/restart animation for slot 1.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Reset animation index for slot 1 to 0.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Starting animation update cycle for slot 1 with 5 valid frames.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Processing preview images for slot 2. Found 5 PIL images.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 1 in slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 2 in slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 3 in slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 4 in slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 5 in slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Checkbox for slot 2 set to state 'normal'.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Starting preview animation for slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Attempting to start/restart animation for slot 2.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Reset animation index for slot 2 to 0.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Starting animation update cycle for slot 2 with 5 valid frames.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Processing preview images for slot 3. Found 5 PIL images.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 1 in slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 2 in slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 3 in slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 4 in slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Successfully created PhotoImage for frame 5 in slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Checkbox for slot 3 set to state 'normal'.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - _create_previews_and_init_checkboxes - Starting preview animation for slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Attempting to start/restart animation for slot 3.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Reset animation index for slot 3 to 0.
+2025-05-12 17:53:17,875 - DEBUG - MainThread - VideoPlacerv2 - start_preview_animation - Starting animation update cycle for slot 3 with 5 valid frames.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Starting pre-marking process.
+2025-05-12 17:53:17,876 - INFO - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Pre-marking logic: 4 videos, 4 valid. MaxScore=0.761, SD=0.027, SD_Threshold=0.747, Fixed_Threshold=0.85
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Video index 0 ('C0210.mp4') not pre-marked. Score 0.6877054169044968. Checkbox state 'normal'.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Video index 1 ('C0211.mp4') not pre-marked. Score 0.7133655929107837. Checkbox state 'normal'.
+2025-05-12 17:53:17,876 - INFO - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Pre-marking video index 2 ('C0212.mp4') - Score 0.761. Checkbox state 'normal'.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Video index 3 ('C0213.mp4') not pre-marked. Score 0.7399979032551928. Checkbox state 'normal'.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _apply_pre_marking_logic - Stored initial confirmation state after pre-marking: [False, False, True, False]
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _finalize_analysis_ui_updates - Valid previews found. Calculating take assignment.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - calculate_and_display_take_assignment called.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - Checking existing takes in target folder: D:/AI Dataset\Footage\Raw\004
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - Calculated starting take: 1.
+2025-05-12 17:53:17,876 - INFO - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - Calculated potential takes: 1-4 for 4 selected files.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - calculate_and_display_take_assignment - Finished take assignment calculation.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to normal.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:17,876 - DEBUG - MainThread - VideoPlacerv2 - _finalize_analysis_ui_updates - check_button_state called after analysis results processed.
+2025-05-12 17:53:18,963 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Preview clicked for slot 0. Attempting to toggle approval.
+2025-05-12 17:53:18,963 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Checkbox for slot 0 current state: 'normal'
+2025-05-12 17:53:18,963 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Approval checkbox for slot 0 is disabled. Click on preview ignored.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Preview clicked for slot 0. Attempting to toggle approval.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Checkbox for slot 0 current state: 'normal'
+2025-05-12 17:53:19,436 - INFO - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Approval for slot 0 toggled (var was False, now True) by preview click. Checkbox state was 'normal'.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to normal.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-05-12 17:53:19,436 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Preview clicked for slot 0. Attempting to toggle approval.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Checkbox for slot 0 current state: 'normal'
+2025-05-12 17:53:19,870 - INFO - MainThread - VideoPlacerv2 - _toggle_approval_for_slot - Approval for slot 0 toggled (var was True, now False) by preview click. Checkbox state was 'normal'.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - check_button_state called.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Post-initial setup phase.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Base dir and ID widgets disabled.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Treeview bind <<TreeviewSelect>> in check_button_state (enabled)
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Category/Word TreeView event <<TreeviewSelect>> is bound
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - File select button state set to normal.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Process button state set to normal. Conditions: FilesSelected=True, ValidTakes=True, Approved=True, AnalysisRunning=False.
+2025-05-12 17:53:19,870 - DEBUG - MainThread - VideoPlacerv2 - check_button_state - Finished check_button_state.
+2025-05-12 17:53:22,325 - INFO - MainThread - VideoPlacerv2 - on_closing - Application closing requested. Stopping animations and destroying window.
+2025-05-12 17:53:22,325 - DEBUG - MainThread - VideoPlacerv2 - on_closing - Cancelled 'after' job after#260 during closing.
+2025-05-12 17:53:22,325 - DEBUG - MainThread - VideoPlacerv2 - on_closing - Cancelled 'after' job after#261 during closing.
+2025-05-12 17:53:22,325 - DEBUG - MainThread - VideoPlacerv2 - on_closing - Cancelled 'after' job after#262 during closing.
+2025-05-12 17:53:22,325 - DEBUG - MainThread - VideoPlacerv2 - on_closing - Cancelled 'after' job after#263 during closing.
+2025-05-12 17:53:22,325 - DEBUG - MainThread - VideoPlacerv2 - on_closing - All known animation 'after' jobs cancelled.
+2025-05-12 17:53:22,344 - INFO - MainThread - VideoPlacerv2 - on_closing - Window destroyed. Application exiting.
+2025-05-12 17:53:22,344 - INFO - MainThread - VideoPlacerv2 - <module> - Tkinter main loop finished.
