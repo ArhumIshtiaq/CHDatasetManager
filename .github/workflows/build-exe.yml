@@ -1,0 +1,52 @@
+name: Build Python Executable
+
+on:
+  push:
+    branches: [ main ] # Or your primary branch, e.g., master
+  release:
+    types: [created] # Trigger when a new release is published
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ['3.9'] # Choose a Python version compatible with your dependencies
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install PyInstaller
+      run: pip install pyinstaller
+
+    - name: Build executable with PyInstaller
+      run: |
+        pyinstaller --name VideoPlacer ^
+                    --onefile ^
+                    --noconsole ^
+                    --icon=CHDatasetManager/assets/app_icon.ico ^
+                    --hidden-import=tkinterdnd2 ^
+                    CHDatasetManager/VideoPlacerv2.py
+        # Notes:
+        # - Update --icon path if your icon is elsewhere, or remove it.
+        # - --noconsole is used for GUI applications to prevent a command window from appearing.
+        # - --hidden-import=tkinterdnd2 is added as TkinterDnD2 can sometimes be missed by PyInstaller's analysis.
+        #   If you encounter other "ModuleNotFound" errors for the .exe, add them as --hidden-import=modulename.
+        # - The `^` character is for line continuation in Windows shell.
+
+    - name: Upload Executable Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: VideoPlacer-Windows-exe
+        path: dist/VideoPlacer.exe # PyInstaller outputs the .exe to a 'dist' folder by default

@@ -1,3 +1,4 @@
+# c:\Users\XC\Desktop\Projects\ConnectHear\CHDatasetManager\VideoPlacerv2.py
 import os
 import shutil
 import tkinter as tk
@@ -7,24 +8,30 @@ import csv
 import datetime
 import threading
 import queue
-import time # For demo/debug purposes if needed
 import concurrent.futures # Added for parallel processing
-import logging # <-- Add logging import
 import sys # Added for sys.exit
+import os # Added for path manipulation
 
-# --- Setup Logging ---
-# Define log file and format BEFORE potential dependency errors
-LOG_FILENAME = 'video_placer_app.log'
-logging.basicConfig(
-    level=logging.DEBUG, # Set initial level to DEBUG to capture everything
-    format='%(asctime)s - %(levelname)s - %(threadName)s - %(message)s',
-    filename=LOG_FILENAME,
-    filemode='a' # Append to the log file
+# --- Adjust sys.path to allow running script directly within a package structure ---
+# This allows imports like 'from CHDatasetManager.module import ...'
+# Get the directory of the current script
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Get the parent directory of the script's directory (this should be the directory containing the CHDatasetManager package)
+_PROJECT_ROOT = os.path.dirname(_SCRIPT_DIR)
+
+# Add the project root to sys.path so that 'CHDatasetManager' can be found as a package
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+
+# --- Local Project Imports ---
+# Assuming 'CHDatasetManager' is the name of the package directory
+from CHDatasetManager.logger_config import logger
+from CHDatasetManager.constants import *
+from CHDatasetManager.video_processing_operations import VideoProcessor
+from CHDatasetManager.file_system_operations import (
+    get_directory_structure, determine_next_take_number,
+    move_and_rename_video, log_verification_to_csv
 )
-logger = logging.getLogger(__name__)
-
-# Log that logging has been set up
-logger.info("Logging configured. Application start.")
 
 # --- Try importing required libraries and provide guidance if missing ---
 try:
@@ -58,26 +65,9 @@ except Exception as e:
      messagebox.showerror("Critical Error", f"An unexpected error occurred during startup:\n{e}")
      sys.exit(1)
 
+# --- Global Constants for the GUI ---
+VIDEO_TYPES_FILTER = [("Video Files", "*.mp4 *.avi *.mov *.wmv *.mkv *.flv"), ("All Files", "*.*")]
 
-# --- Constants ---
-THUMBNAIL_WIDTH = 160 # Width for the animation display area
-THUMBNAIL_HEIGHT = 90  # Height for the animation display area
-LOG_FILE = "verification_log.csv" # This is for the separate CSV log
-# Keyframes for SSIM calculation (Optimized)
-SSIM_KEYFRAME_PERCENTAGES = [0.25, 0.33, 0.5, 0.66, 0.75]
-NUM_SSIM_KEYFRAMES = len(SSIM_KEYFRAME_PERCENTAGES)
-SSIM_RESIZE_WIDTH = 160
-SSIM_RESIZE_HEIGHT = 90
-# Preview Frames Configuration
-NUM_PREVIEW_FRAMES = 5
-PREVIEW_START_PERC = 0.25 # Start preview sampling at 25%
-PREVIEW_END_PERC = 0.75   # End preview sampling at 75%
-PREVIEW_FRAME_PERCENTAGES = np.linspace(PREVIEW_START_PERC, PREVIEW_END_PERC, NUM_PREVIEW_FRAMES)
-PREVIEW_ANIMATION_DELAY = 250 # Milliseconds between preview frames (Adjust as needed)
-
-MAX_VIDEOS = 4
-PRE_MARKING_SD_FACTOR = 0.5 # Factor for SD-based pre-marking
-PRE_MARKING_SCORE_THRESHOLD = 0.85
 
 class VideoPlacerApp:
     """
@@ -135,6 +125,9 @@ class VideoPlacerApp:
         self.is_analysis_running = False
         logger.debug("Tkinter variables and state variables initialized.")
 
+        # --- Initialize Helper Classes ---
+        self.video_processor = VideoProcessor(self.analysis_queue.put)
+
 
         # --- Style ---
         style = ttk.Style()
@@ -168,7 +161,7 @@ class VideoPlacerApp:
         logger.debug("Base directory widgets placed.")
 
         ttk.Label(main_frame, text="Interpreter ID:").grid(row=row_id, column=0, sticky=tk.W, padx=10, pady=5)
-        interpreter_ids = [f"{i:03d}" for i in range(1, 11)] # Example IDs
+        interpreter_ids = [f"{i:03d}" for i in INTERPRETER_ID_RANGE]
         self.interpreter_id_combobox = ttk.Combobox(main_frame, textvariable=self.selected_interpreter_id, values=interpreter_ids, width=40, state='disabled') # Adjusted width
         self.interpreter_id_combobox.grid(row=row_id, column=1, sticky=tk.EW, padx=5, pady=5)
         self.interpreter_id_combobox.bind("<<ComboboxSelected>>", self.on_id_select)
@@ -403,38 +396,29 @@ class VideoPlacerApp:
             self.status_message.set("Error: Base directory invalid. Cannot load categories.")
             return
 
-        try:
-            categories = sorted([d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))])
-            if not categories:
-                logger.info(f"No category subdirectories found in {base_dir}.")
-                self.category_word_tree.insert("", "end", text="No categories found in base directory.", open=False)
-                self.category_word_tree.unbind("<<TreeviewSelect>>") # Keep disabled if no categories
-                logger.debug("Treeview unbind <<TreeviewSelect>> in populate_category_word_tree (no categories)")
-                self.status_message.set("No categories found. Add category folders to the base directory.")
-                return
+        dir_structure = get_directory_structure(base_dir)
 
-            for category_name in categories:
+        if not dir_structure:
+            logger.info(f"No category subdirectories found or error scanning {base_dir}.")
+            self.category_word_tree.insert("", "end", text="No categories found or error.", open=False)
+            self.category_word_tree.unbind("<<TreeviewSelect>>")
+            self.status_message.set("No categories found or error. Check base directory.")
+            return
+
+        for category_name, words in dir_structure.items():
                 category_id = self.category_word_tree.insert("", "end", text=category_name, open=False, tags=('category',))
-                category_path = os.path.join(base_dir, category_name)
-                words = sorted([w for w in os.listdir(category_path) if os.path.isdir(os.path.join(category_path, w))])
                 if words:
                     for word_name in words:
                         self.category_word_tree.insert(category_id, "end", text=word_name, tags=('word',))
                 else:
-                    # Optional: Indicate if a category has no words
                     self.category_word_tree.insert(category_id, "end", text=" (No words)", tags=('empty_category_info',))
             
-            self.category_word_tree.bind("<<TreeviewSelect>>", self.on_tree_item_select)
-            logger.debug("Treeview bind <<TreeviewSelect>> in populate_category_word_tree (success)")
-            self.status_message.set("Select a Category, then a Word from the tree.")
-            logger.info(f"Populated category/word tree with {len(categories)} categories from {base_dir}.")
+        self.category_word_tree.bind("<<TreeviewSelect>>", self.on_tree_item_select)
+        logger.debug("Treeview bind <<TreeviewSelect>> in populate_category_word_tree (success)")
+        self.status_message.set("Select a Category, then a Word from the tree.")
+        # logger.info(f"Populated category/word tree with {len(categories)} categories from {base_dir}.") # categories not defined here
+        logger.info(f"Populated category/word tree with {len(dir_structure)} categories from {base_dir}.")
 
-        except Exception as e:
-            logger.error(f"Error populating category/word tree: {e}", exc_info=True)
-            messagebox.showerror("Tree Population Error", f"Failed to populate categories and words: {e}")
-            self.category_word_tree.unbind("<<TreeviewSelect>>")
-            logger.debug("Treeview unbind <<TreeviewSelect>> in populate_category_word_tree (exception)")
-            self.status_message.set("Error populating category/word tree.")
 
     def on_tree_item_select(self, event=None):
         """Handles selection changes in the category/word TreeView."""
@@ -498,10 +482,9 @@ class VideoPlacerApp:
             return
 
         # Validate file extensions (basic check)
-        valid_extensions = ('.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv')
         validated_filepaths = []
         for fp in filepaths:
-            if os.path.splitext(fp)[1].lower() in valid_extensions:
+            if os.path.splitext(fp)[1].lower() in VALID_VIDEO_EXTENSIONS:
                 validated_filepaths.append(fp)
             else:
                 logger.warning(f"Skipping non-video file (based on extension): {fp}")
@@ -532,7 +515,11 @@ class VideoPlacerApp:
         self.is_analysis_running = True
         logger.info("Analysis started. Setting is_analysis_running to True.")
 
-        analysis_thread = threading.Thread(target=self.analyze_videos_thread, args=(filepaths_to_process,), daemon=True)
+        # Use the VideoProcessor instance to run analysis
+        analysis_thread = threading.Thread(
+            target=self.video_processor.run_analysis_in_thread,
+            args=(filepaths_to_process,),
+            daemon=True)
         analysis_thread.start()
         logger.debug(f"Analysis thread started: {analysis_thread.name}")
 
@@ -550,9 +537,8 @@ class VideoPlacerApp:
             logger.warning("Attempted to select files while analysis is already running.")
             return
 
-        video_types = [("Video Files", "*.mp4 *.avi *.mov *.wmv *.mkv *.flv"), ("All Files", "*.*")]
         logger.debug(f"Opening file dialog to select up to {MAX_VIDEOS} video files.")
-        filepaths_from_dialog = filedialog.askopenfilenames(title=f"Select up to {MAX_VIDEOS} Video Files", filetypes=video_types)
+        filepaths_from_dialog = filedialog.askopenfilenames(title=f"Select up to {MAX_VIDEOS} Video Files", filetypes=VIDEO_TYPES_FILTER)
 
         if filepaths_from_dialog:
             self._process_filepaths_for_analysis(filepaths_from_dialog)
@@ -596,298 +582,6 @@ class VideoPlacerApp:
             self.clear_analysis_results()
             self.status_message.set("Error processing dropped files.")
             self.check_button_state()
-
-    # --- Helper Functions for Video Analysis ---
-    def _extract_frames(self, video_path):
-        """Extracts SSIM keyframes and preview frames from a single video file."""
-        video_filename = os.path.basename(video_path)
-        logger.debug(f"Thread {threading.current_thread().name}: Attempting to extract frames from: {video_filename}")
-
-        keyframes_for_ssim = [None] * NUM_SSIM_KEYFRAMES
-        preview_pil_images = [None] * NUM_PREVIEW_FRAMES
-        error_messages = []
-        cap = None
-
-        try:
-            cap = cv2.VideoCapture(video_path)
-            if not cap.isOpened():
-                error_msg = f"Error opening: {video_filename}"
-                error_messages.append(error_msg)
-                logger.error(f"Thread {threading.current_thread().name}: Failed to open video file: {video_path}")
-                return keyframes_for_ssim, preview_pil_images, error_messages
-
-            logger.debug(f"Thread {threading.current_thread().name}: Successfully opened video file: {video_filename}")
-
-            frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            fps = cap.get(cv2.CAP_PROP_FPS)
-            logger.debug(f"Thread {threading.current_thread().name}: Frame count for {video_filename}: {frame_count}, FPS: {fps:.2f}")
-
-            if frame_count < 2:
-                error_msg = f"Not enough frames: {video_filename} ({frame_count} frames)"
-                error_messages.append(error_msg)
-                logger.warning(f"Thread {threading.current_thread().name}: Video has less than 2 frames: {video_path}")
-                return keyframes_for_ssim, preview_pil_images, error_messages
-
-            # Extract SSIM Keyframes
-            logger.debug(f"Thread {threading.current_thread().name}: Starting SSIM keyframe extraction for {video_filename}")
-            for kf_idx, percentage in enumerate(SSIM_KEYFRAME_PERCENTAGES):
-                frame_idx = max(0, min(int(frame_count * percentage), frame_count - 1))
-                logger.debug(f"Thread {threading.current_thread().name}: SSIM Keyframe {kf_idx+1}/{NUM_SSIM_KEYFRAMES} ({percentage*100:.1f}%, frame {frame_idx}) from {video_filename}")
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
-                ret_key, frame_key = cap.read()
-
-                if ret_key and frame_key is not None:
-                    height, width, _ = frame_key.shape
-                    # --- Crop to middle horizontal third ---
-                    start_col = width // 3
-                    end_col = 2 * width // 3
-                    cropped_frame_key = frame_key[:, start_col:end_col]
-                    logger.debug(f"Thread {threading.current_thread().name}: Cropped SSIM frame {kf_idx+1} from {width}x{height} to {cropped_frame_key.shape[1]}x{cropped_frame_key.shape[0]}.")
-
-                    gray_frame = cv2.cvtColor(cropped_frame_key, cv2.COLOR_BGR2GRAY)
-                    resized_gray_frame = cv2.resize(gray_frame, (SSIM_RESIZE_WIDTH, SSIM_RESIZE_HEIGHT), interpolation=cv2.INTER_AREA)
-                    keyframes_for_ssim[kf_idx] = resized_gray_frame
-                    logger.debug(f"Thread {threading.current_thread().name}: Successfully extracted, cropped, grayed, and resized SSIM keyframe {kf_idx+1} to {resized_gray_frame.shape[1]}x{resized_gray_frame.shape[0]}.")
-                else:
-                    error_msg = f"Error reading SSIM keyframe {kf_idx+1}: {video_filename} at frame {frame_idx}"
-                    error_messages.append(error_msg)
-                    logger.error(f"Thread {threading.current_thread().name}: {error_msg}")
-            logger.debug(f"Thread {threading.current_thread().name}: Finished SSIM keyframe extraction for {video_filename}.")
-
-
-            # Extract Preview Frames
-            logger.debug(f"Thread {threading.current_thread().name}: Starting preview frame extraction for {video_filename}")
-            for pv_idx, percentage in enumerate(PREVIEW_FRAME_PERCENTAGES):
-                frame_idx = max(0, min(int(frame_count * percentage), frame_count - 1))
-                logger.debug(f"Thread {threading.current_thread().name}: Preview Frame {pv_idx+1}/{NUM_PREVIEW_FRAMES} ({percentage*100:.1f}%, frame {frame_idx}) from {video_filename}")
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
-                ret_prev, frame_prev = cap.read()
-
-                if ret_prev and frame_prev is not None:
-                    height, width, _ = frame_prev.shape
-                    # --- Crop to middle horizontal third ---
-                    start_col = width // 3
-                    end_col = 2 * width // 3
-                    cropped_frame_prev = frame_prev[:, start_col:end_col]
-                    logger.debug(f"Thread {threading.current_thread().name}: Cropped preview frame {pv_idx+1} from {width}x{height} to {cropped_frame_prev.shape[1]}x{cropped_frame_prev.shape[0]}.")
-
-                    # --- Calculate aspect ratio preserving resize ---
-                    cropped_h, cropped_w, _ = cropped_frame_prev.shape
-                    if cropped_h > 0 and cropped_w > 0:
-                        aspect_ratio = cropped_w / cropped_h
-                        if THUMBNAIL_WIDTH / aspect_ratio <= THUMBNAIL_HEIGHT:
-                            final_w = THUMBNAIL_WIDTH
-                            final_h = int(final_w / aspect_ratio)
-                        else:
-                            final_h = THUMBNAIL_HEIGHT
-                            final_w = int(final_h * aspect_ratio)
-                        # Ensure dimensions are at least 1x1
-                        final_w = max(1, final_w)
-                        final_h = max(1, final_h)
-
-                        preview_frame_resized = cv2.resize(cropped_frame_prev, (final_w, final_h), interpolation=cv2.INTER_AREA)
-                        preview_pil_images[pv_idx] = Image.fromarray(cv2.cvtColor(preview_frame_resized, cv2.COLOR_BGR2RGB))
-                        logger.debug(f"Thread {threading.current_thread().name}: Successfully extracted, cropped, and resized preview frame {pv_idx+1} to {final_w}x{final_h}.")
-                    else:
-                        # Handle cases with invalid dimensions (though unlikely after successful read)
-                        error_msg = f"Invalid frame dimensions for preview {pv_idx+1}: {video_filename}"
-                        error_messages.append(error_msg)
-                        logger.error(f"Thread {threading.current_thread().name}: {error_msg} - Dimensions {cropped_w}x{cropped_h}")
-                        preview_pil_images[pv_idx] = None # Add a placeholder
-                    # --- End Aspect Ratio Resize ---
-                else:
-                    error_msg = f"Error reading preview frame {pv_idx+1}: {video_filename} at frame {frame_idx}"
-                    error_messages.append(error_msg)
-                    logger.error(f"Thread {threading.current_thread().name}: {error_msg}")
-            logger.debug(f"Thread {threading.current_thread().name}: Finished preview frame extraction for {video_filename}.")
-
-
-        except Exception as e:
-            error_msg = f"Unexpected error processing {video_filename}: {e}"
-            error_messages.append(error_msg)
-            logger.error(f"Thread {threading.current_thread().name}: {error_msg}", exc_info=True)
-        finally:
-            if cap is not None and cap.isOpened():
-                cap.release()
-                logger.debug(f"Thread {threading.current_thread().name}: Released video capture for: {video_filename}")
-            logger.debug(f"Thread {threading.current_thread().name}: Finished frame extraction process for: {video_filename}.")
-
-        return keyframes_for_ssim, preview_pil_images, error_messages
-
-
-    def _calculate_ssim_scores(self, all_keyframes, filepaths):
-        """Calculates average SSIM scores between videos based on extracted keyframes."""
-        num_videos = len(all_keyframes)
-        logger.debug(f"Calculating SSIM scores for {num_videos} videos.")
-
-        per_video_avg_scores = [None] * num_videos
-        error_messages = []
-
-        # Determine which videos have valid keyframes
-        valid_video_indices = [i for i, kf_list in enumerate(all_keyframes) if kf_list and all(kf is not None for kf in kf_list)]
-        logger.debug(f"Found {len(valid_video_indices)} videos with all required keyframes for SSIM: {valid_video_indices}")
-
-        if len(valid_video_indices) > 1:
-            video_score_sums = {idx: 0.0 for idx in valid_video_indices}
-            video_pair_counts = {idx: 0 for idx in valid_video_indices}
-            pair_scores = {} # Store individual pair scores for potential debugging/future use
-
-            try:
-                logger.debug("Starting SSIM pairwise comparison across keyframes for valid videos.")
-                # Iterate through all *pairs* of valid videos
-                for i in range(len(valid_video_indices)):
-                    orig_idx_i = valid_video_indices[i]
-                    for j in range(i + 1, len(valid_video_indices)):
-                        orig_idx_j = valid_video_indices[j]
-
-                        # Iterate through all keyframes for this pair
-                        pair_keyframe_scores = []
-                        for kf_idx in range(NUM_SSIM_KEYFRAMES):
-                             frame_i = all_keyframes[orig_idx_i][kf_idx]
-                             frame_j = all_keyframes[orig_idx_j][kf_idx]
-
-                             # Both frames must be valid (checked by valid_video_indices)
-                             try:
-                                 score = ssim(frame_i, frame_j, data_range=frame_i.max() - frame_i.min())
-                                 pair_keyframe_scores.append(score)
-                                 logger.debug(f"  SSIM Keyframe {kf_idx+1}: Pair ({orig_idx_i}, {orig_idx_j}) = {score:.4f}")
-                             except ValueError as ve:
-                                 # This should ideally not happen if keyframes are valid numpy arrays of same size
-                                 error_messages.append(f"SSIM error for pair ({orig_idx_i}, {orig_idx_j}) at keyframe {kf_idx+1}: {ve}")
-                                 logger.warning(f"SSIM calculation error for Keyframe {kf_idx+1} (Videos {orig_idx_i} '{os.path.basename(filepaths[orig_idx_i])}' vs {orig_idx_j} '{os.path.basename(filepaths[orig_idx_j])}'): {ve}. Skipping this keyframe for this pair.")
-                                 # Do NOT append score if calculation failed for this keyframe
-
-                        if pair_keyframe_scores: # Only average if there were successful keyframe comparisons for this pair
-                            avg_pair_score = np.mean(pair_keyframe_scores)
-                            pair_scores[(orig_idx_i, orig_idx_j)] = avg_pair_score
-                            pair_scores[(orig_idx_j, orig_idx_i)] = avg_pair_score # Store symmetrically
-                            logger.debug(f"  Average SSIM for Pair ({orig_idx_i}, {orig_idx_j}) over {len(pair_keyframe_scores)} keyframes = {avg_pair_score:.4f}")
-
-                            # Accumulate average pair score to each video's total
-                            video_score_sums[orig_idx_i] += avg_pair_score
-                            video_score_sums[orig_idx_j] += avg_pair_score
-                            video_pair_counts[orig_idx_i] += 1
-                            video_pair_counts[orig_idx_j] += 1
-                        else:
-                             # Log if a pair had no successful keyframe SSIM comparisons
-                             error_messages.append(f"No successful keyframe SSIM comparisons for pair ({orig_idx_i}, {orig_idx_j})")
-                             logger.warning(f"No successful keyframe SSIM comparisons for pair ({orig_idx_i} vs {orig_idx_j}).")
-
-
-                # Calculate the final average score for each video (average of its average pair scores)
-                for vid_idx in valid_video_indices:
-                    if video_pair_counts[vid_idx] > 0:
-                        final_avg_score = video_score_sums[vid_idx] / video_pair_counts[vid_idx]
-                        per_video_avg_scores[vid_idx] = final_avg_score
-                        logger.info(f"Final Average SSIM for Video {vid_idx} ('{os.path.basename(filepaths[vid_idx])}'): {final_avg_score:.4f} (based on {video_pair_counts[vid_idx]} pairs)")
-                    else:
-                         # This case should ideally not happen if valid_video_indices has > 1 element
-                         # but included for robustness. Means a video had valid frames but no valid pairs.
-                         per_video_avg_scores[vid_idx] = None # Indicate no meaningful score could be calculated
-                         error_messages.append(f"Could not calculate average SSIM for video {vid_idx} ('{os.path.basename(filepaths[vid_idx])}') as it had no valid pairs.")
-                         logger.warning(f"Could not calculate average SSIM for video {vid_idx} ('{os.path.basename(filepaths[vid_idx])}') - no valid pairs.")
-
-
-            except Exception as e:
-                error_msg = f"Unexpected error during multi-frame SSIM calculation: {e}"
-                logger.error(f"{error_msg}", exc_info=True)
-                error_messages.append(error_msg)
-                # Invalidate all scores if a critical error occurs during the main loop
-                per_video_avg_scores = [None] * num_videos
-
-        elif len(valid_video_indices) == 1:
-            single_valid_idx = valid_video_indices[0]
-            logger.info(f"Only one video ({os.path.basename(filepaths[single_valid_idx])}) had all required keyframes for SSIM. Setting its score to 1.0.")
-            # If only one video has valid frames, its score relative to others is undefined, assign default 1.0
-            per_video_avg_scores[single_valid_idx] = 1.0
-        else:
-             logger.warning(f"Not enough valid videos ({len(valid_video_indices)}) with all required keyframes for pairwise SSIM comparison. No SSIM scores calculated.")
-
-        logger.debug("Finished SSIM score calculation.")
-        return per_video_avg_scores, error_messages
-
-
-    # --- Background Thread for Analysis (Refactored for Parallel Frame Extraction) ---
-    def analyze_videos_thread(self, filepaths):
-        """
-        Worker function (runs in a separate thread): Coordinates frame extraction (in parallel)
-        and SSIM calculation, puts results in queue.
-        """
-        thread_name = threading.current_thread().name
-        logger.info(f"Analysis thread ({thread_name}) started for {len(filepaths)} videos.")
-
-        num_videos = len(filepaths)
-        all_preview_pil_images = [[] for _ in range(num_videos)] # List of lists for PIL images
-        all_keyframes_for_ssim = [[] for _ in range(num_videos)] # List of lists for numpy arrays
-        all_error_messages = []
-        analysis_scores = [None] * num_videos # Pre-allocate scores list
-
-
-        # Step 1: Extract frames for all videos in parallel
-        logger.debug(f"Analysis thread ({thread_name}): Starting parallel frame extraction using ThreadPoolExecutor.")
-        results = [None] * num_videos # Pre-allocate list for results keyed by original index
-
-        # Using a limited ThreadPoolExecutor might be better for resource management
-        # max_workers=min(MAX_VIDEOS, os.cpu_count() or 1) # Or a fixed number like 2 or 4
-        # Using default `None` lets executor choose based on CPU count, which is often fine
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Submit tasks and store futures with original index
-            future_to_index = {executor.submit(self._extract_frames, path): i for i, path in enumerate(filepaths)}
-            logger.debug(f"Analysis thread ({thread_name}): Submitted {len(future_to_index)} extraction tasks.")
-
-            # Process completed futures as they finish
-            for future in concurrent.futures.as_completed(future_to_index):
-                original_index = future_to_index[future]
-                filename = os.path.basename(filepaths[original_index])
-                try:
-                    keyframes, previews, errors = future.result()
-                    results[original_index] = (keyframes, previews, errors)
-                    logger.debug(f"Analysis thread ({thread_name}): Extraction task for '{filename}' (index {original_index}) completed successfully.")
-                    if errors:
-                         all_error_messages.extend(errors)
-                         logger.warning(f"Analysis thread ({thread_name}): Extraction for '{filename}' completed with errors.")
-                except Exception as exc:
-                    # Handle exceptions during the task execution itself (e.g., unhandled cv2 error)
-                    error_msg = f"Unexpected error during frame extraction for '{filename}' (index {original_index}): {exc}"
-                    all_error_messages.append(error_msg)
-                    logger.error(f"Analysis thread ({thread_name}): {error_msg}", exc_info=True)
-                    # Store placeholder or handle error state for this video - results[original_index] is already None
-
-        # Unpack results, maintaining original order
-        logger.debug(f"Analysis thread ({thread_name}): Unpacking extraction results.")
-        for idx in range(num_videos):
-            if results[idx]: # Check if result was successfully stored
-                keyframes, previews, errors = results[idx] # errors already added to all_error_messages
-                all_keyframes_for_ssim[idx] = keyframes
-                all_preview_pil_images[idx] = previews
-            else:
-                # If results[idx] is None, the task likely failed completely. Add default empty lists.
-                all_keyframes_for_ssim[idx] = [None] * NUM_SSIM_KEYFRAMES
-                all_preview_pil_images[idx] = [None] * NUM_PREVIEW_FRAMES
-                # Error message for this should have been added when catching the exception
-
-
-        # Step 2: Calculate SSIM scores using the extracted keyframes
-        logger.debug(f"Analysis thread ({thread_name}): Starting SSIM score calculation.")
-        per_video_avg_scores, ssim_errors = self._calculate_ssim_scores(all_keyframes_for_ssim, filepaths)
-        if ssim_errors:
-            all_error_messages.extend(ssim_errors)
-            logger.warning(f"Analysis thread ({thread_name}): SSIM calculation completed with errors.")
-        else:
-            logger.debug(f"Analysis thread ({thread_name}): SSIM score calculation completed successfully.")
-
-        analysis_scores = per_video_avg_scores # Use the calculated scores
-
-        # Step 3: Put results into the queue for the main thread
-        logger.debug(f"Analysis thread ({thread_name}): Putting results into analysis queue.")
-        self.analysis_queue.put({
-            'type': 'analysis_complete',
-            'scores': analysis_scores,
-            'previews': all_preview_pil_images, # Pass the list of lists of PIL images
-            'errors': all_error_messages,
-            'filepaths': filepaths # Pass filepaths for context in main thread if needed
-        })
-        logger.info(f"Analysis thread ({thread_name}) finished and results put in queue.")
 
 
     # --- MODIFIED Queue Checking (Runs in Main Thread) ---
@@ -950,24 +644,24 @@ class VideoPlacerApp:
 
                     if video_idx < num_selected and video_idx < len(list_of_preview_pil_list):
                         pil_images_for_video = list_of_preview_pil_list[video_idx]
-                        logger.debug(f"Processing preview images for slot {video_idx}. Found {len(pil_images_for_video)} potential PIL images.")
+                        logger.debug(f"Processing preview images for slot {video_idx}. Found {len(pil_images_for_video)} potential PIL images (orig+flow).")
 
-                        for frame_idx in range(NUM_PREVIEW_FRAMES):
-                            pil_image = pil_images_for_video[frame_idx] if frame_idx < len(pil_images_for_video) else None
-
+                        # Iterate through all images provided for this video (original and flow frames)
+                        for img_list_idx, pil_image in enumerate(pil_images_for_video):
                             if pil_image is not None:
                                 try:
                                     photo_img = ImageTk.PhotoImage(pil_image)
                                     photo_images_for_video.append(photo_img)
                                     preview_success = True
-                                    logger.debug(f"Successfully created PhotoImage for preview frame {frame_idx} in slot {video_idx}.")
+                                    # Determine if it's an original or flow frame for logging
+                                    logger.debug(f"Successfully created PhotoImage for original frame {img_list_idx +1} (list index {img_list_idx}) in slot {video_idx}.")
                                 except Exception as e:
-                                    logger.error(f"Error creating PhotoImage for preview frame {frame_idx} in slot {video_idx}: {e}", exc_info=True)
+                                    logger.error(f"Error creating PhotoImage for image at list index {img_list_idx} in slot {video_idx}: {e}", exc_info=True)
                                     photo_images_for_video.append(None) # Add placeholder on error
                             else:
                                 photo_images_for_video.append(None) # Add placeholder if no PIL image was provided
-                                logger.debug(f"No PIL image available for preview frame {frame_idx} in slot {video_idx}.")
-
+                                # This case might indicate an issue upstream if a PIL image was expected
+                                logger.warning(f"PIL image was None for image at list index {img_list_idx} in slot {video_idx}.")
                     self.preview_photo_images[video_idx] = photo_images_for_video # Store list of PhotoImages
 
                     # Determine checkbox state based on whether *any* preview frames loaded for this video
@@ -1110,7 +804,8 @@ class VideoPlacerApp:
            video_idx >= len(self.preview_labels) or video_idx >= len(self.preview_animation_index) or \
            video_idx >= len(self.preview_after_ids):
              logger.error(f"Invalid video_idx {video_idx} during update_preview_animation. Index out of bounds for component lists. Stopping.")
-             self.preview_after_ids[video_idx] = None # Attempt to stop recurrence if possible
+             if video_idx < MAX_VIDEOS and video_idx < len(self.preview_after_ids): # Check bounds before trying to stop
+                self.preview_after_ids[video_idx] = None # Attempt to stop recurrence if possible
              return
 
 
@@ -1173,38 +868,13 @@ class VideoPlacerApp:
         target_folder_path = os.path.join(base_dir, category, word, interpreter_id) # Updated
         logger.debug(f"Checking existing takes in target folder: {target_folder_path}")
 
-        highest_take = 0
-        start_take = 1
+        start_take = determine_next_take_number(target_folder_path, interpreter_id)
+        if start_take == -1: # Error occurred
+            self.take_assignment_display.set("Takes: Error")
+            self.status_message.set(f"Error checking existing takes in target folder.")
+            return
 
-        if os.path.isdir(target_folder_path):
-            try:
-                # Regex to find files like 001_1.mp4, 001_2.mov etc.
-                pattern = re.compile(re.escape(f"{interpreter_id}_") + r"([1-4])\..+$", re.IGNORECASE) # Added IGNORECASE for extensions
-                logger.debug(f"Checking files in '{target_folder_path}' for pattern '{pattern.pattern}'.")
-                existing_files = os.listdir(target_folder_path)
-                logger.debug(f"Found {len(existing_files)} items in target folder.")
-                for filename in existing_files:
-                     match = pattern.match(filename)
-                     if match:
-                        try:
-                            take_number = int(match.group(1))
-                            highest_take = max(highest_take, take_number)
-                            logger.debug(f"Found existing file '{filename}' with take number {take_number}. Current highest take: {highest_take}.")
-                        except ValueError:
-                            logger.warning(f"Found file matching pattern but with non-integer take number group: '{filename}'. Skipping.")
-                            continue # Should not happen with ([1-4]) but good safety
-
-                start_take = highest_take + 1
-                logger.debug(f"Highest existing take found: {highest_take}. Calculated starting take: {start_take}.")
-
-            except Exception as e:
-                self.take_assignment_display.set("Takes: Error")
-                self.status_message.set(f"Error checking existing takes in target folder: {e}")
-                logger.error(f"Error checking existing takes in '{target_folder_path}': {e}", exc_info=True)
-                return
-        else:
-            start_take = 1
-            logger.debug(f"Target folder '{target_folder_path}' does not exist. Starting take number is 1.")
+        logger.debug(f"Calculated starting take: {start_take}.")
 
 
         if start_take > 4:
@@ -1308,10 +978,9 @@ class VideoPlacerApp:
 
 
     # --- Logging Function (for CSV) ---
-    def log_verification_data(self, processed_indices, assigned_take_numbers):
+    def _trigger_csv_logging(self, processed_indices, assigned_take_numbers):
         """Logs verification details including pre-marked and final confirmation status to CSV."""
-        logger.info(f"Logging verification data to CSV: {LOG_FILE}")
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logger.info(f"Preparing data for CSV logging to: {VERIFICATION_LOG_FILE}")
         num_selected = len(self.selected_file_paths_tuple)
 
         # Get final confirmation states for the selected files
@@ -1336,7 +1005,6 @@ class VideoPlacerApp:
         logger.debug(f"Assigned take numbers logged: {assigned_takes_str}")
 
         log_entry = {
-            "Timestamp": timestamp,
             "BaseDirectory": self.base_directory.get(),
             "Category": self.selected_category.get(), # Updated
             "Word": self.selected_word.get(),         # Updated (and renamed key for clarity)
@@ -1351,26 +1019,11 @@ class VideoPlacerApp:
         }
         logger.debug(f"CSV log entry prepared: {log_entry}")
 
-        try:
-            file_exists = os.path.isfile(LOG_FILE)
-            fieldnames = list(log_entry.keys())
-
-            with open(LOG_FILE, 'a', newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-
-                # Write header only if file doesn't exist or is empty
-                if not file_exists or os.path.getsize(LOG_FILE) == 0:
-                    writer.writeheader()
-                    logger.info(f"CSV log file '{LOG_FILE}' did not exist or was empty. Wrote header.")
-
-                writer.writerow(log_entry)
-            logger.info(f"Successfully logged verification data to {LOG_FILE}")
-
-        except Exception as e:
-            logger.error(f"Error logging data to CSV file '{LOG_FILE}': {e}", exc_info=True)
+        if not log_verification_to_csv(log_entry):
             # Update GUI status message for user visibility
             self.status_message.set("Error logging data (check log file and console).")
-            messagebox.showerror("Logging Error", f"Failed to write verification data to log file:\n{e}\nCheck '{LOG_FILE}' and application log for details.")
+            messagebox.showerror("Logging Error", f"Failed to write verification data to log file.\nCheck '{VERIFICATION_LOG_FILE}' and application log for details.")
+
 
 
     # --- Processing Logic ---
@@ -1415,33 +1068,12 @@ class VideoPlacerApp:
         target_folder_path = os.path.join(base_dir, category, word, interpreter_id) # Updated
         logger.debug(f"Processing target folder: {target_folder_path}")
 
-        highest_take = 0
-        start_take = 1
-        # Re-check existing files to determine the *actual* starting take number just before moving
-        if os.path.isdir(target_folder_path):
-             try:
-                pattern = re.compile(re.escape(f"{interpreter_id}_") + r"([1-4])\..+$", re.IGNORECASE)
-                existing_files = os.listdir(target_folder_path)
-                logger.debug(f"Re-verifying existing files in {target_folder_path} before processing.")
-                for filename in existing_files:
-                     match = pattern.match(filename)
-                     if match:
-                        try:
-                            take_number = int(match.group(1))
-                            highest_take = max(highest_take, take_number)
-                            logger.debug(f"Found existing file '{filename}' (take {take_number}). Current highest: {highest_take}")
-                        except ValueError:
-                            logger.warning(f"Skipping file '{filename}' in re-verification due to non-integer take number.")
-                            continue
-                start_take = highest_take + 1
-                logger.info(f"Re-verified highest existing take as {highest_take}. Starting take for new files will be {start_take}.")
-             except Exception as e:
-                 messagebox.showerror("Error", f"Failed to re-verify existing takes before processing: {e}");
-                 logger.error(f"Failed to re-verify existing takes in '{target_folder_path}': {e}", exc_info=True)
-                 return
-        else:
-            start_take = 1
-            logger.info(f"Target folder '{target_folder_path}' does not exist. Starting take number is 1.")
+        start_take = determine_next_take_number(target_folder_path, interpreter_id)
+        if start_take == -1: # Error occurred
+            messagebox.showerror("Error", f"Failed to re-verify existing takes before processing.");
+            return
+        
+        logger.info(f"Re-verified. Starting take for new files will be {start_take}.")
 
 
         num_approved = len(confirmed_indices)
@@ -1454,33 +1086,12 @@ class VideoPlacerApp:
             self.check_button_state(); # Update button state
             return
 
-
-        # Create target folder if it doesn't exist
-        if not os.path.isdir(target_folder_path):
-             logger.info(f"Target folder does not exist. Creating directory: {target_folder_path}")
-             try:
-                 os.makedirs(target_folder_path)
-                 logger.info(f"Successfully created target folder: {target_folder_path}")
-             except Exception as e:
-                 messagebox.showerror("Error", f"Could not create target folder '{target_folder_path}': {e}");
-                 logger.error(f"Failed to create target folder '{target_folder_path}': {e}", exc_info=True)
-                 return
-
-
         # Prepare data for CSV logging *before* processing files
-        assigned_take_numbers_log = []
-        approved_indices_log = []
-        current_take_assign_num = start_take
-        # Iterate through original selected indices to match approved state
-        for index in range(num_selected):
-             if index in confirmed_indices:
-                approved_indices_log.append(index)
-                assigned_take_numbers_log.append(current_take_assign_num)
-                current_take_assign_num += 1
-
-        # Log the initial and final states *before* file operations
-        self.log_verification_data(approved_indices_log, assigned_take_numbers_log)
-
+        # This is done by calling the internal helper which then calls the file_system_operations one
+        self._trigger_csv_logging(
+            [idx for idx in range(num_selected) if idx in confirmed_indices], # Log only approved indices
+            list(range(start_take, start_take + num_approved)) # Log assigned take numbers
+        )
 
         # --- Perform File Movement and Renaming ---
         errors = []
@@ -1497,35 +1108,18 @@ class VideoPlacerApp:
             if index in confirmed_indices:
                 assigned_take_number = start_take + take_counter # Assign next available take number
                 original_filename = os.path.basename(source_video_path)
+                _, file_extension = os.path.splitext(source_video_path)
+                new_filename = f"{interpreter_id}_{assigned_take_number}{file_extension}"
 
-                if not os.path.isfile(source_video_path):
-                    error_msg = f"Source file not found: {original_filename} (Index {index})"
-                    errors.append(error_msg)
-                    logger.error(error_msg)
-                    continue # Skip this file
-
-                try:
-                    _, file_extension = os.path.splitext(source_video_path)
-                    new_filename = f"{interpreter_id}_{assigned_take_number}{file_extension}"
-                    final_destination_path = os.path.join(target_folder_path, new_filename)
-
-                    logger.info(f"Moving approved file (Index {index}): '{original_filename}' -> '{final_destination_path}' (Assigned Take {assigned_take_number})")
-
-                    # Check if destination file already exists (shouldn't happen with correct take assignment, but safety)
-                    if os.path.exists(final_destination_path):
-                         error_msg = f"Destination file already exists, skipping move for '{original_filename}': {final_destination_path}"
-                         errors.append(error_msg)
-                         logger.error(error_msg)
-                         continue # Skip this file
-
-                    shutil.move(source_video_path, final_destination_path)
-                    logger.info(f"Successfully moved and renamed '{original_filename}' to '{new_filename}'.")
+                success, error_msg = move_and_rename_video(
+                    source_video_path,
+                    target_folder_path,
+                    new_filename
+                )
+                if success:
                     success_count += 1
                     take_counter += 1 # Increment take counter only for successful moves
-
-                except Exception as e:
-                    error_msg = f"Failed to move '{original_filename}' (Index {index}): {e}"
-                    logger.error(f"Error during shutil.move for '{original_filename}': {e}", exc_info=True)
+                else:
                     errors.append(error_msg)
 
         logger.info(f"Finished file movement. Successfully processed {success_count} files with {len(errors)} errors.")
@@ -1615,11 +1209,12 @@ class VideoPlacerApp:
 
 # --- Run the Application ---
 if __name__ == "__main__":
-    # Dependency check is now done near the top after logging setup
-    # The check here is redundant but kept for clarity based on the original structure
-    # We can simplify this block significantly
+    # Logger is configured when logger_config is imported.
+    # Constants are available from constants.py
+
     logger.debug("Entering __main__ block.")
     # Dependency check (including TkinterDnD2) is now part of the initial try-except block at the top.
+    # This ensures that if basic Tk for messagebox is needed, it's available.
 
     # This secondary check is mostly for defense-in-depth or if the top check was bypassed.
     try:
@@ -1658,7 +1253,7 @@ if __name__ == "__main__":
     else:
         root = tk.Tk()
         logger.info("Root window created with standard tk.Tk(). Drag-and-drop is disabled.")
-    # The App initialization logs start here
+
     app = VideoPlacerApp(root)
     logger.info("Starting Tkinter main loop.")
     root.mainloop()
