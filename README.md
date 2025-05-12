@@ -22,7 +22,6 @@ This tool provides a graphical user interface (GUI) built with Tkinter to:
 *   **Similarity Scoring:** Uses Structural Similarity Index (SSIM) to compare video frames and suggest the best takes.
 *   **Automated Take Assignment:** Determines the next available take number for a given gloss and interpreter.
 *   **Batch Processing:** Allows selection and processing of multiple videos at once (up to a configurable limit).
-*   **Configuration Management:** Uses `config.ini` for persistent settings like base directory and interpreter IDs.
 *   **CSV Logging:** Records details of processed videos, including original and new filenames, scores, and user decisions.
 *   **Error Handling:** Provides feedback on issues during video analysis or file operations.
 *   **Multithreaded Analysis:** Video frame extraction and analysis are performed in a separate thread to keep the GUI responsive.
@@ -67,24 +66,6 @@ This tool provides a graphical user interface (GUI) built with Tkinter to:
     ```bash
     pip install -r requirements.txt
     ```
-
-3.  **Configuration (`config.ini`):**
-    The application will create a `config.ini` file in the same directory if it doesn't exist. You can pre-populate it or edit it after the first run.
-    Example `config.ini`:
-    ```ini
-    [General]
-    base_directory = C:/Path/To/Your/Dataset
-    last_interpreter_id = User1
-    
-    [InterpreterIDs]
-    ids = User1,User2,User3
-    
-    [Categories]
-    # Categories are dynamically read from the base_directory structure
-    ```
-    *   `base_directory`: The root folder where your dataset will be stored.
-    *   `last_interpreter_id`: The last used interpreter ID, for convenience.
-    *   `ids`: A comma-separated list of available interpreter IDs.
 
 ## Usage
 
@@ -136,7 +117,6 @@ All processing actions are logged in a `processing_log.csv` file located in the 
 *   `VideoPlacerv2.py`: Main application script containing the GUI logic and overall workflow orchestration.
 *   `video_processing_operations.py`: Handles video frame extraction, resizing, SSIM calculation, and preview generation.
 *   `file_system_operations.py`: Manages file/folder operations like creating directories, moving/renaming files, and determining take numbers.
-*   `config_manager.py`: Handles reading and writing to the `config.ini` file.
 *   `constants.py`: Defines various constants used throughout the application (e.g., UI dimensions, processing parameters).
 *   `logger_config.py`: Configures the application's logging behavior.
 
