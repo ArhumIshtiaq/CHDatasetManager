@@ -31,13 +31,14 @@ jobs:
       run: pip install pyinstaller
 
     - name: Build executable with PyInstaller
+      working-directory: CHDatasetManager # Change working directory to where the script is
       run: |
         pyinstaller --name VideoPlacer `
                     --onefile `
                     --noconsole `
-                    --icon=CHDatasetManager/assets/app_icon.ico `
+                    --icon=assets/app_icon.ico ` # Path relative to CHDatasetManager
                     --hidden-import=tkinterdnd2 `
-                    CHDatasetManager/VideoPlacerv2.py
+                    VideoPlacerv2.py # Script name relative to CHDatasetManager
         # Notes:
         # - Update --icon path if your icon is elsewhere, or remove it.
         # - --noconsole is used for GUI applications to prevent a command window from appearing.
@@ -49,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: VideoPlacer-Windows-exe
-        path: dist/VideoPlacer.exe # PyInstaller outputs the .exe to a 'dist' folder by default
+        path: CHDatasetManager/dist/VideoPlacer.exe # Adjusted path as dist will be in CHDatasetManager
