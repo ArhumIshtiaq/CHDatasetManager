@@ -1,14 +1,9 @@
 # c:\Users\XC\Desktop\Projects\ConnectHear\CHDatasetManager\VideoPlacerv2.py
 import os
-import shutil
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-import re
-import csv
-import datetime
 import threading
 import queue
-import concurrent.futures # Added for parallel processing
 import sys # Added for sys.exit
 import logging # Added for the decorator's default level
 import functools # Added for functools.wraps in the decorator
@@ -528,8 +523,8 @@ class VideoPlacerApp:
         if tkinter_dnd_available: # Check if TkinterDnD was imported successfully at the script level
             try:
                 if isinstance(self.master, TkinterDnD.Tk): # Check if master is DND enabled
-                    self.verification_panel_frame.drop_target_register(DND_FILES) # Use the new panel
-                    self.verification_panel_frame.dnd_bind('<<Drop>>', self.handle_drop_event)
+                    self.verification_panel_frame.preview_labels[0].drop_target_register(DND_FILES) # Use the new panel
+                    self.verification_panel_frame.preview_labels[0].dnd_bind('<<Drop>>', self.handle_drop_event)
                     logger.info("Drag and drop enabled for the verification frame.")
                     self.dnd_initialized_successfully = True
                 else:
@@ -836,13 +831,25 @@ class VideoPlacerApp:
         # logger.debug("Updating score display labels.") # Covered by decorator
         for i in range(MAX_VIDEOS):
             current_score = scores[i] if i < num_selected else None
-            score_text = "Score: -"
-            if current_score is not None: score_text = f"Score: {current_score:.3f}"
-            elif i < num_selected : score_text = "Score: N/A" # Only show N/A if it was a selected file
+            # The score_text variable assignments above were redundant as set_slot_score determines the final text.
+
             self.verification_panel_frame.set_slot_score(i, current_score, score_text_prefix="Score: " if current_score is not None else "") # Pass prefix only if score exists
-            logger.debug(f"Set score for slot {i}: - (index out of bounds for selected files)")
-        
-        valid_scores = [s for s in scores[:num_selected] if s is not None]
+
+            # Accurate log message reflecting the actual display text
+            actual_display_text = ""
+            log_detail = ""
+            if current_score is not None:
+                actual_display_text = f"Score: {current_score:.3f}"
+                log_detail = f"(Selected video, Score: {current_score:.3f})"
+            elif i < num_selected: # A selected video for which analysis might have failed (score is None)
+                actual_display_text = "N/A" # Displayed due to empty prefix in set_slot_score call
+                log_detail = "(Selected video, Score: N/A - analysis failed or no score)"
+            else: # An unselected/empty slot
+                actual_display_text = "N/A" # Displayed due to empty prefix in set_slot_score call
+                log_detail = "(Empty slot)"
+            logger.debug(f"Set score display for slot {i} to: '{actual_display_text}' {log_detail}")
+
+        valid_scores = [s for s in scores[:num_selected] if s is not None] # This line is functionally correct.
         max_score = 0.0
         if valid_scores: max_score = max(valid_scores)
         return valid_scores, max_score
@@ -1345,3 +1352,4 @@ if __name__ == "__main__":
     logger.info("Starting Tkinter main loop.")
     root.mainloop()
     logger.info("Tkinter main loop finished.")
+    
