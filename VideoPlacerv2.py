@@ -138,20 +138,23 @@ class SetupWidgetsFrame(ttk.Frame):
         self.base_dir_button.grid(row=0, column=3, padx=10, pady=(10, 5))
 
         ttk.Label(self, text="Interpreter ID:").grid(row=1, column=0, sticky=tk.W, padx=10, pady=5)
-        interpreter_ids = [f"{i:03d}" for i in INTERPRETER_ID_RANGE]
-        self.interpreter_id_combobox = ttk.Combobox(self, textvariable=self.app.selected_interpreter_id, values=interpreter_ids, width=40, state='disabled')
-        self.interpreter_id_combobox.grid(row=1, column=1, columnspan=2, sticky=tk.EW, padx=5, pady=5)
-        self.interpreter_id_combobox.bind("<<ComboboxSelected>>", self.app.on_id_select)
+        # Allow any 4-digit number (0000-9999) for interpreter ID
+        self.interpreter_id_entry = ttk.Entry(self, textvariable=self.app.selected_interpreter_id, width=40, state='disabled')
+        self.interpreter_id_entry.grid(row=1, column=1, columnspan=2, sticky=tk.EW, padx=5, pady=5)
+        self.interpreter_id_button = ttk.Button(self, text="Set ID", command=self.app.on_id_set, state='disabled')
+        self.interpreter_id_button.grid(row=1, column=3, padx=10, pady=5)
 
         self.columnconfigure(1, weight=1) # Allow entry/combobox to expand
 
     @log_method_call
     def update_widget_states(self, initial_setup_done, base_dir_set):
         self.base_dir_button.config(state='normal' if not base_dir_set and not initial_setup_done else 'disabled')
-        self.interpreter_id_combobox.config(state='readonly' if base_dir_set and not initial_setup_done else 'disabled')
+        self.interpreter_id_entry.config(state='normal' if base_dir_set and not initial_setup_done else 'readonly')
+        self.interpreter_id_button.config(state='normal' if base_dir_set and not initial_setup_done else 'disabled')
         if initial_setup_done:
             self.base_dir_button.config(state='disabled')
-            self.interpreter_id_combobox.config(state='disabled')
+            self.interpreter_id_entry.config(state='readonly')
+            self.interpreter_id_button.config(state='disabled')
 
 class CategoryWordTreeFrame(ttk.Frame):
     """Frame for the Category/Word TreeView."""
@@ -462,7 +465,8 @@ class VideoPlacerApp:
         self.setup_widgets_frame.grid(row=row_basedir, column=0, columnspan=4, sticky=tk.EW, pady=(10,0))
         # Direct access to child widgets for now, can be refactored later if needed
         self.base_dir_button = self.setup_widgets_frame.base_dir_button
-        self.interpreter_id_combobox = self.setup_widgets_frame.interpreter_id_combobox
+        self.interpreter_id_entry = self.setup_widgets_frame.interpreter_id_entry
+        self.interpreter_id_button = self.setup_widgets_frame.interpreter_id_button
         logger.debug("SetupWidgetsFrame placed.")
 
         # --- Category/Word TreeView ---
@@ -569,8 +573,9 @@ class VideoPlacerApp:
             self.status_message.set("Step 2: Select your Interpreter ID")
             logger.info(f"Base directory selected: {directory}")
             # Enable next step and disable this one
-            self.setup_widgets_frame.interpreter_id_combobox.config(state='readonly') # Use frame's widget
-            self.setup_widgets_frame.interpreter_id_combobox.focus()
+            self.setup_widgets_frame.interpreter_id_entry.config(state='normal') # Use frame's widget
+            self.setup_widgets_frame.interpreter_id_button.config(state='normal')
+            self.setup_widgets_frame.interpreter_id_entry.focus()
             self.setup_widgets_frame.base_dir_button.config(state='disabled')
             self.category_word_tree_frame.unbind_select_event()
             logger.debug("Treeview unbind <<TreeviewSelect>> in select_base_dir")
@@ -583,16 +588,24 @@ class VideoPlacerApp:
             logger.debug("Base directory selection cancelled, status message updated.")
 
     @log_method_call
-    def on_id_select(self, event=None):
-        selected_id = self.selected_interpreter_id.get()
-        if not selected_id:
+    def on_id_set(self):
+        """Validates and sets the interpreter ID (must be a 4-digit number)"""
+        selected_id = self.selected_interpreter_id.get().strip()
+        
+        # Validate that the ID is a 4-digit number
+        if not selected_id or not selected_id.isdigit() or len(selected_id) != 4:
+            messagebox.showerror("Invalid Interpreter ID", "Please enter a valid 4-digit number (0000-9999).")
+            logger.warning(f"Invalid interpreter ID entered: '{selected_id}'. Must be a 4-digit number.")
             return
+            
         if self.initial_setup_done:
+            logger.debug("Interpreter ID already set. Cannot change until app restart.")
             return
 
-        logger.info(f"Interpreter ID selected: {selected_id}. Initial setup now complete.")
+        logger.info(f"Interpreter ID set: {selected_id}. Initial setup now complete.")
         self.initial_setup_done = True
-        self.setup_widgets_frame.interpreter_id_combobox.config(state='disabled') # Use frame's widget
+        self.setup_widgets_frame.interpreter_id_entry.config(state='readonly')
+        self.setup_widgets_frame.interpreter_id_button.config(state='disabled')
         self.status_message.set("Step 3: Select a Word from the tree below.")
         logger.debug("Calling populate_category_word_tree.")
         self.populate_category_word_tree()
@@ -621,7 +634,7 @@ class VideoPlacerApp:
 
         self.check_button_state() # Re-evaluate process button state
         logger.debug("check_button_state called after Category selection.")
-        logger.debug("on_id_select finished processing.")
+        logger.debug("on_id_set finished processing.")
 
     @log_method_call
     def populate_category_word_tree(self):
@@ -1352,4 +1365,3 @@ if __name__ == "__main__":
     logger.info("Starting Tkinter main loop.")
     root.mainloop()
     logger.info("Tkinter main loop finished.")
-    
