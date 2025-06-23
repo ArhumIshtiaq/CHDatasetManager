@@ -139,22 +139,22 @@ class SetupWidgetsFrame(ttk.Frame):
 
         ttk.Label(self, text="Interpreter ID:").grid(row=1, column=0, sticky=tk.W, padx=10, pady=5)
         # Allow any 4-digit number (0000-9999) for interpreter ID
-        self.interpreter_id_entry = ttk.Entry(self, textvariable=self.app.selected_interpreter_id, width=40, state='disabled')
+        self.interpreter_id_entry = ttk.Entry(self, textvariable=self.app.selected_interpreter_id, width=40)
         self.interpreter_id_entry.grid(row=1, column=1, columnspan=2, sticky=tk.EW, padx=5, pady=5)
-        self.interpreter_id_button = ttk.Button(self, text="Set ID", command=self.app.on_id_set, state='disabled')
+        self.interpreter_id_button = ttk.Button(self, text="Set ID", command=self.app.on_id_set)
         self.interpreter_id_button.grid(row=1, column=3, padx=10, pady=5)
 
         self.columnconfigure(1, weight=1) # Allow entry/combobox to expand
 
     @log_method_call
     def update_widget_states(self, initial_setup_done, base_dir_set):
-        self.base_dir_button.config(state='normal' if not base_dir_set and not initial_setup_done else 'disabled')
-        self.interpreter_id_entry.config(state='normal' if base_dir_set and not initial_setup_done else 'readonly')
-        self.interpreter_id_button.config(state='normal' if base_dir_set and not initial_setup_done else 'disabled')
-        if initial_setup_done:
-            self.base_dir_button.config(state='disabled')
-            self.interpreter_id_entry.config(state='readonly')
-            self.interpreter_id_button.config(state='disabled')
+        # The base directory button should always be enabled, allowing users to change it at any time.
+        self.base_dir_button.config(state='normal')
+        
+        # Interpreter ID entry and button should be enabled once a base directory is set.
+        # They remain enabled for dynamic changes even after initial setup.
+        self.interpreter_id_entry.config(state='normal' if base_dir_set else 'disabled')
+        self.interpreter_id_button.config(state='normal' if base_dir_set else 'disabled')
 
 class CategoryWordTreeFrame(ttk.Frame):
     """Frame for the Category/Word TreeView."""
@@ -563,25 +563,29 @@ class VideoPlacerApp:
 
     @log_method_call
     def select_base_dir(self):
-        if self.initial_setup_done:
-            logger.debug(f"{self.__class__.__name__}.select_base_dir: Initial setup already done, returning.") # Specific log still useful
-            return
-
-        directory = filedialog.askdirectory(title="Select Base Directory (Set Once)")
+        directory = filedialog.askdirectory(title="Select Base Directory")
         if directory:
             self.base_directory.set(directory)
-            self.status_message.set("Step 2: Select your Interpreter ID")
             logger.info(f"Base directory selected: {directory}")
-            # Enable next step and disable this one
+
+            # Reset application state when base directory changes
+            # This allows the user to re-enter interpreter ID for the new base directory
+            self.initial_setup_done = False
+            self.selected_interpreter_id.set("")
+            self.selected_category.set("")
+            self.selected_word.set("")
+            self.selected_file_paths_tuple = ()
+            self.selected_files_info.set("No files selected")
+            self.clear_analysis_results() # Clear any previous analysis results
+
+            self.status_message.set("Step 2: Select your Interpreter ID") # Update status
+            
+            # Update UI elements directly or via check_button_state
             self.setup_widgets_frame.interpreter_id_entry.config(state='normal') # Use frame's widget
             self.setup_widgets_frame.interpreter_id_button.config(state='normal')
             self.setup_widgets_frame.interpreter_id_entry.focus()
-            self.setup_widgets_frame.base_dir_button.config(state='disabled')
-            self.category_word_tree_frame.unbind_select_event()
-            logger.debug("Treeview unbind <<TreeviewSelect>> in select_base_dir")
-            self.select_files_button.config(state='disabled')
-            self.process_button.config(state='disabled') # Process button should also be disabled
-            logger.debug("Enabled Interpreter ID combobox, disabled Base Dir button.")
+            self.populate_category_word_tree() # Repopulate tree based on new base dir
+            self.check_button_state() # Update all button states
         else:
             logger.info("Base directory selection cancelled.")
             self.status_message.set("Base directory selection cancelled. Please select Base Directory.")
@@ -602,10 +606,11 @@ class VideoPlacerApp:
             logger.debug("Interpreter ID already set. Cannot change until app restart.")
             return
 
-        logger.info(f"Interpreter ID set: {selected_id}. Initial setup now complete.")
+        logger.info(f"Interpreter ID set: {selected_id}.")
+        # The initial_setup_done flag is still useful for the base directory selection
+        # but the interpreter ID can now be changed dynamically.
         self.initial_setup_done = True
-        self.setup_widgets_frame.interpreter_id_entry.config(state='readonly')
-        self.setup_widgets_frame.interpreter_id_button.config(state='disabled')
+        # No longer setting state to readonly/disabled here, handled by check_button_state
         self.status_message.set("Step 3: Select a Word from the tree below.")
         logger.debug("Calling populate_category_word_tree.")
         self.populate_category_word_tree()
@@ -1068,6 +1073,8 @@ class VideoPlacerApp:
 
         # Post-Initial Setup Phase
         logger.debug("Post-initial setup phase.")
+        # Pass initial_setup_done=True to disable base_dir_button
+        # Pass base_dir_set=True because it should be set if initial_setup_done is True
         self.setup_widgets_frame.update_widget_states(initial_setup_done=True, base_dir_set=True)
 
         if self.base_directory.get(): # Should always be true if initial_setup_done
